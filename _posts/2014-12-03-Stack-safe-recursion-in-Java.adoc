@@ -1,0 +1,8 @@
+= Stack safe recursion in Java
+:published_at: 2014-12-03
+
+In this article, excerpted from my book https://manning.com/books/functional-programming-in-java[Functional Programming in Java], I explain how to use recursion while avoiding the risk of a `StackOverflowException`.
+
+Corecursion is composing computing steps by using the output of one step as the input of the next one starting with the first step. Recursion is the same operation, but starting with the last step. In this case, we have to delay evaluation until we encounter a base condition (corresponding to the first step of corecursion).
+
+
