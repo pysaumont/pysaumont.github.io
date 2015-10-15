@@ -1,10 +1,1 @@
-{
-  "meta": {
-    "username": "fpinjava",
-    "repositoryName": "fpinjava.github.io",
-    "branch": "master"
-  },
-  "theme": {
-    "name": "Casper"
-  }
-}
+{"meta":{"username":"fpinjava","repositoryName":"fpinjava.github.io","branch":"master"},"site":{"title":"Functional Programming in Java","description":"This the blog associated with my book \"Functional Programming in Java\", published by Manning. \n\nFunctional Programming is not tied to any \"functional\" language. It is a way of thinking and a paradigm for writing programs. Some languages are more \"functional friendly\", and if you intend to write program using the functional paradigm,  you should probably pick one of them... if you can. This blog (and the associated book) is dedicated to those who can't.","url":"https://fpinjava.github.io"},"socialnetwork":{},"theme":{"name":"Casper","url":"//fpinjava.github.io/themes/Casper"}}
