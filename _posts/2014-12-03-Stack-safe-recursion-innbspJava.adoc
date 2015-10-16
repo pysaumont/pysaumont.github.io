@@ -1,4 +1,4 @@
-= Stack safe recursion in(nbsp)Java
+= Stack safe recursion in{nbsp}Java
 :published_at: 2014-12-03
 
 In this article, excerpted from my book https://manning.com/books/functional-programming-in-java[Functional Programming in Java], I explain how to use recursion while avoiding the risk of a `StackOverflowException`.
