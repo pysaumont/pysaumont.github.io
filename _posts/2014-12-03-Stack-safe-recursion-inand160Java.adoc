@@ -286,7 +286,7 @@ static TailCall<Integer> add(int x, int y) {  // <1>
       : new TailCall.Suspend<>(() -> add(x + 1, y – 1));  // <3>
 }
 ----
-<1> Method now return a `TailCall`
+<1> Method now returns a `TailCall`
 <2> In terminal condition, a `Return` is returned
 <3> In non terminal condition, a `Suspend` is returned
 
