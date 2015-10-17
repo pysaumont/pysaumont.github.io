@@ -255,7 +255,7 @@ static {
 <h2 id="_beware_of_stack_based_recursion">Beware of stack based recursion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This function uses stack base recursion, which means that every recursive call will push the current state on the stack, which has a very limited size. (The actual size is implementation dependant.) As a result, this program will blow the stack (resulting in a <code>StackOverflowError</code>) if you call the function with a value higher than somewhere between 2_000 an 3_000. So you should not use this kind of recursion in production code unless you are sure that the number of nested calls remains low. By the way, this function will result in an arithmetic overflow for f(18).</p>
+<p>This function uses stack base recursion, which means that every recursive call will push the current state on the stack, which has a very limited size. (The actual size is implementation dependant.) As a result, this program will blow the stack (resulting in a <code>StackOverflowError</code>) if you call the function with a value higher than somewhere between 2000 an 3000. So you should not use this kind of recursion in production code unless you are sure that the number of nested calls remains low. By the way, this function will result in an arithmetic overflow for f(18).</p>
 </div>
 </div>
 </div>
