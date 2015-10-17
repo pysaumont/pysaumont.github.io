@@ -1,1 +1,22 @@
-{"meta":{"username":"fpinjava","repositoryName":"pysaumont.github.io","branch":"master"},"site":{"title":"Functional Programming in&#160;Java","description":"This is the blog associated with my book \"Functional Programming in Java\", published by Manning (https://manning.com/books/functional-programming-in-java). \n\nFunctional Programming is not tied to any \"functional\" language. It is a way of thinking and a paradigm for writing programs. Some languages are more \"functional friendly\", and if you intend to write program using the functional paradigm,  you should probably pick one of them... if you can. This blog (and the associated book) is dedicated to those who can't.","postsPerPage":"10","disqus":"fpinjava","url":"https://fpinjava.github.io"},"socialnetwork":{"email":"fpinjava@fpinjava.com","github":"http://github.com/fpinjava/fpinjava"},"theme":{"name":"uno","url":"//pysaumont.github.io/themes/uno"}}
+{
+  "meta": {
+    "username": "fpinjava",
+    "repositoryName": "pysaumont.github.io",
+    "branch": "master"
+  },
+  "site": {
+    "title": "Functional Programming in&#160;Java",
+    "description": "This is the blog associated with my book \"Functional Programming in Java\", published by Manning (https://manning.com/books/functional-programming-in-java). \n\nFunctional Programming is not tied to any \"functional\" language. It is a way of thinking and a paradigm for writing programs. Some languages are more \"functional friendly\", and if you intend to write program using the functional paradigm,  you should probably pick one of them... if you can. This blog (and the associated book) is dedicated to those who can't.",
+    "postsPerPage": "10",
+    "disqus": "fpinjava",
+    "url": "https://pysaumont.github.io"
+  },
+  "socialnetwork": {
+    "email": "fpinjava@fpinjava.com",
+    "github": "http://github.com/fpinjava/fpinjava"
+  },
+  "theme": {
+    "name": "uno",
+    "url": "//pysaumont.github.io/themes/uno"
+  }
+}
