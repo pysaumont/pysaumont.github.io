@@ -35,7 +35,7 @@
     <meta property="og:description" content="Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html" />
     <meta property="article:published_time" content="2016-04-26T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-04-28T09:30:59.578Z" />
+    <meta property="article:modified_time" content="2016-04-28T09:32:17.936Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="What is Functional Programming?" />
@@ -57,7 +57,7 @@
     "headline": "What is Functional Programming?",
     "url": "https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html",
     "datePublished": "2016-04-26T22:00:00.000Z",
-    "dateModified": "2016-04-28T09:30:59.578Z",
+    "dateModified": "2016-04-28T09:32:17.936Z",
     "description": "Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..."
 }
     </script>
@@ -234,7 +234,7 @@ public static int length(List&lt;String&gt; line) {
 <p>Looking at it with a more generic point of view, here is what this program does: It takes a list of objects and returns a list of list of objects, grouping these objects according to a criteria represented by a condition that should be respected. The condition is that a reduced value of each list, obtained with  a reduction function and an identity object, should satisfy a given predicate.</p>
 </div>
 <div class="paragraph">
-<p>Here, the list of objects is a list of words. (Although represented by a comma separated string, it is actually a list.) The return value is a list of lines (although represented by a list of comma separated strings). The reduction function is the sum of the length of the strings in a list of strings. The identity (imperative programmers will see this as the starting value for computing the result) is an empty list of list of strings. The predicate takes the reduced value, add the length of the next word + 1 for the space, and returns true if it results in no more than the given max length of a line. In practice, this could be a way to typeset words in lines of a given maximum length.</p>
+<p>Here, the list of objects is a list of words. (Although represented by a comma separated string, it is actually a list.) The return value is a list of lines (although represented by a list of comma separated strings). The reduction function is the sum of the length of the strings in a list of strings, plus the number of spaces, which is the number of elements minus 1. The identity (imperative programmers will see this as the starting value for computing the result) is an empty list of list of strings. The predicate takes the reduced value, add the length of the next word + 1 for the space, and returns true if it results in no more than the given max length of a line. In practice, this could be a way to typeset words in lines of a given maximum length.</p>
 </div>
 <div class="paragraph">
 <p>A functional programmer, looking at all these abstractions, would probably implement them in a generic form. That way, if she was to solve this problem again with other types, she could just apply the given function. Such a functional implementation might seem harder to write and/or to understand, although only for imperative programmers. But it is easier to test, much much safer to maintain and evolve, and reusable. It might also be slower, but as far as it is fast enough, we don&#8217;t care. And to know if it is fat enough, we must implement it. Implementing with performance in mind would be premature optimization. It is much better to implement for optimal architecture, and optimizing only if needed when the structure is frozen.</p>
