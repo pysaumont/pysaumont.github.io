@@ -1,4 +1,5 @@
 = What is Functional Programming?
+:published_at: 2016-04-27
 
 As the author of link:https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java], I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply list differences because functional programming is a different way of thinking. The main difference I generally stress is:
 
@@ -20,7 +21,7 @@ The problem is to place words on lines, never exceeding the maximum line length.
 
 This problem is easy to solve with a very simple imperative program, for example:
 
-[source, java]
+[source,java]
 ----
 public static void main(String... args) {
 
