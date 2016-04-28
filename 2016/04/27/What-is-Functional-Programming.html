@@ -35,7 +35,7 @@
     <meta property="og:description" content="Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html" />
     <meta property="article:published_time" content="2016-04-26T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-04-28T09:47:58.633Z" />
+    <meta property="article:modified_time" content="2016-04-28T09:50:50.681Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="What is Functional Programming?" />
@@ -57,7 +57,7 @@
     "headline": "What is Functional Programming?",
     "url": "https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html",
     "datePublished": "2016-04-26T22:00:00.000Z",
-    "dateModified": "2016-04-28T09:47:58.633Z",
+    "dateModified": "2016-04-28T09:50:50.681Z",
     "description": "Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..."
 }
     </script>
@@ -369,7 +369,7 @@ Output.reduceNoParallel(new Output&lt;&gt;(lengthSum), f, words).values().stream
 </div>
 </div>
 <div class="paragraph">
-<p>Not only is this implementation fully functional, using only pure functions and never sharing mutable state, but it is also fully generic and may be used as is to solve many other similar problems based on different types.</p>
+<p>This implementation fully functional, using only pure functions and never sharing mutable state, but it is also fully generic and may be used as is to solve many other similar problems based on different types.</p>
 </div>
 </div>
 </div>
@@ -419,7 +419,7 @@ public Function&lt;List&lt;String&gt;, List&lt;List&lt;String&gt;&gt;&gt; group(
 </div>
 </div>
 <div class="paragraph">
-<p>The first two <code>group</code> method may go into the <code>Output</code> class, which for the occasion will be renamed <code>Grouper</code>, since it is a generic class used for grouping anything.</p>
+<p>The first two <code>group</code> methods may go into the <code>Output</code> class, which for the occasion will be renamed <code>Grouper</code>, since it is a generic class used for grouping anything.</p>
 </div>
 <div class="paragraph">
 <p>The <code>f</code> function, the <code>p</code> predicate and the third <code>group()</code> method will go in a new <code>String</code> specific class that will be called <code>StringGrouper</code>. here is the complete generic <code>Grouper</code> class:</p>
