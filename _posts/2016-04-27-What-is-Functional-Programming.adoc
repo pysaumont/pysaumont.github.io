@@ -10,14 +10,14 @@ ______
 I also use to emphasize something that might not be an essential difference but is fundamental for most functional programmers:
 
 ______
-Functional programming is primarily about defining abstractions. As a consequence, most functional programmers, when given a problem to solve, will start by looking for things that might be abstracted. They will then code these abstractions. Some will often not even care to solve the original problem given how trivial it becomes once every possible abstraction have been extracted and implemented separately.
+Functional programming is primarily about defining abstractions. As a consequence, most functional programmers, when given a problem to solve, will start by looking for things that might be abstracted. They will then code these abstractions. Some will often not even care to solve the original problem given how trivial it becomes once every possible abstraction have been extracted and coded separately.
 ______
 
-On of the most famous example, is the abstraction of all control structures. Functional Programming do not use `for` and `while` loops as imperative languages do. Loops are abstracted into functions, so, as a functional programmer, you will probably never see them.
+One of the most famous examples is the abstraction of all control structures. Functional Programmers do not use `for` and `while` loops as their imperative fellows do. Loops are abstracted into functions, so, as a functional programmer, you will probably never see one.
 
 But the easiest way to explain things (at least to imperative programmers) is to give an example. I recently had to make such an example to explain how Functional Programming could be used to solve a real business problem.
 
-The problem is to place words on lines, never exceeding the maximum line length. Spaces between words on a line are counted for one character. We start with a List<String> (a list of words) and should end with a List<List<String>> (a list of lines).
+The problem is to place words on lines, never exceeding the maximum line length. Spaces between words on a same line are counted for one character. We start with a `List<String>` (a list of words) and should end with a `List<List<String>>` (a list of lines).
 
 This problem is easy to solve with a very simple imperative program, for example:
 
