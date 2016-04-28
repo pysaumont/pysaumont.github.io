@@ -35,7 +35,7 @@
     <meta property="og:description" content="Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html" />
     <meta property="article:published_time" content="2016-04-26T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-04-28T09:22:04.609Z" />
+    <meta property="article:modified_time" content="2016-04-28T09:26:24.467Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="What is Functional Programming?" />
@@ -57,7 +57,7 @@
     "headline": "What is Functional Programming?",
     "url": "https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html",
     "datePublished": "2016-04-26T22:00:00.000Z",
-    "dateModified": "2016-04-28T09:22:04.609Z",
+    "dateModified": "2016-04-28T09:26:24.467Z",
     "description": "Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..."
 }
     </script>
@@ -171,18 +171,18 @@
 <div class="quoteblock">
 <blockquote>
 <div class="paragraph">
-<p>Functional programming is primarily about defining abstractions. As a consequence, most functional programmers, when given a problem to solve, will start by looking for things that might be abstracted. They will then code these abstractions. Some will often not even care to solve the original problem given how trivial it becomes once every possible abstraction have been extracted and implemented separately.</p>
+<p>Functional programming is primarily about defining abstractions. As a consequence, most functional programmers, when given a problem to solve, will start by looking for things that might be abstracted. They will then code these abstractions. Some will often not even care to solve the original problem given how trivial it becomes once every possible abstraction have been extracted and coded separately.</p>
 </div>
 </blockquote>
 </div>
 <div class="paragraph">
-<p>On of the most famous example, is the abstraction of all control structures. Functional Programming do not use <code>for</code> and <code>while</code> loops as imperative languages do. Loops are abstracted into functions, so, as a functional programmer, you will probably never see them.</p>
+<p>One of the most famous examples is the abstraction of all control structures. Functional Programmers do not use <code>for</code> and <code>while</code> loops as their imperative fellows do. Loops are abstracted into functions, so, as a functional programmer, you will probably never see one.</p>
 </div>
 <div class="paragraph">
 <p>But the easiest way to explain things (at least to imperative programmers) is to give an example. I recently had to make such an example to explain how Functional Programming could be used to solve a real business problem.</p>
 </div>
 <div class="paragraph">
-<p>The problem is to place words on lines, never exceeding the maximum line length. Spaces between words on a line are counted for one character. We start with a List&lt;String&gt; (a list of words) and should end with a List&lt;List&lt;String&gt;&gt; (a list of lines).</p>
+<p>The problem is to place words on lines, never exceeding the maximum line length. Spaces between words on a same line are counted for one character. We start with a <code>List&lt;String&gt;</code> (a list of words) and should end with a <code>List&lt;List&lt;String&gt;&gt;</code> (a list of lines).</p>
 </div>
 <div class="paragraph">
 <p>This problem is easy to solve with a very simple imperative program, for example:</p>
