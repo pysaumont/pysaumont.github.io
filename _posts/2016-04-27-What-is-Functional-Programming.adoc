@@ -249,7 +249,7 @@ public Function<List<String>, List<List<String>>> group() {
 
 The first two `group` methods may go into the `Output` class, which for the occasion will be renamed `Grouper`, since it is a generic class used for grouping anything.
 
-The `f` function, the `p` predicate and the third `group()` method will go in a new `String` specific class that will be called `StringGrouper`. here is the complete generic `Grouper` class:
+The `f` function, the `p` predicate and the third `group()` method will go in a new `String` specific class that will be called `StringGrouper`. Here is the complete generic `Grouper` class:
 
 [source, java]
 ----
@@ -335,7 +335,7 @@ public class StringGrouper {
 }
 ----
 
-Note that the `StringGrouper.group()` method returns a partially applied function. The `identity`, `f` and `p` parameters have been applied, leaving us with a function from List<String> to List<List<String>>. This makes sense, since we will probably have to process many lists with the same configuration.
+Note that the `StringGrouper.group()` method returns a partially applied function. The `identity`, `f` and `p` parameters have been applied, leaving us with a function from `List<String>` to `List<List<String>>`. This makes sense, since we will probably have to process many lists with the same configuration.
 
 Now, the client code is awfully simple:
 
@@ -345,9 +345,9 @@ public class Client {
 
   public static void main(String...args) {
 
-    StringGrouper grouper = new StringGrouper(10);
+    StringGrouper grouper = new StringGrouper(20);
 
-    List<String> words = Arrays.asList("123", "456", "789", "abc", "def");
+    List<String> words = Arrays.asList("Once", "upon", "a", "time", "there", "was", "a", "prince","who", "lived", "in", "a", "magnificent", "castle");
 
     grouper.group().apply(words).forEach(System.out::println);
   }
@@ -358,4 +358,4 @@ Note that the grouping function (returned by `grouper.group()`) may be applied t
 
 == Conclusion
 
-Writing the Grouper class may seem intimidating, but this is "simply" Java 8. No tricks. It would be much simpler with a good functional library as the one I describe in my book link:https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java], to be published thiis summer by Manning, and already available in Manning Early Access Program (MEAP). I also explain all the functional techniques that are put to work and can as well be used with standard Java 8 functional constructs (Function(s), Stream, Optional...)
+Writing the `Grouper` class may seem intimidating, but this is "simply" Java 8. No tricks. It would be much simpler with a good functional library as the one I describe in my book link:https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java], to be published in July 2016 by Manning, and already available in Manning Early Access Program (MEAP). I also explain all the functional techniques that are put to work and can as well be used with standard Java 8 functional constructs (`Function`, `Stream`, `Optional`...)
