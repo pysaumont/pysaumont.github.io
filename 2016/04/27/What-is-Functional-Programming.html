@@ -35,7 +35,7 @@
     <meta property="og:description" content="Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html" />
     <meta property="article:published_time" content="2016-04-26T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-04-28T09:35:21.585Z" />
+    <meta property="article:modified_time" content="2016-04-28T09:36:58.818Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="What is Functional Programming?" />
@@ -57,7 +57,7 @@
     "headline": "What is Functional Programming?",
     "url": "https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html",
     "datePublished": "2016-04-26T22:00:00.000Z",
-    "dateModified": "2016-04-28T09:35:21.585Z",
+    "dateModified": "2016-04-28T09:36:58.818Z",
     "description": "Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..."
 }
     </script>
@@ -256,7 +256,7 @@ public static int length(List&lt;String&gt; line) {
 <p>In practice, this could be a way to typeset words in lines of a given maximum length.</p>
 </div>
 <div class="paragraph">
-<p>A functional programmer, looking at all these abstractions, would probably implement them in a generic form. That way, if she was to solve this problem again with other types, she could just apply the given function. Such a functional implementation might seem harder to write and/or to understand, although only for imperative programmers. But it is easier to test, much much safer to maintain and evolve, and reusable. It might also be slower, but as far as it is fast enough, we don&#8217;t care. And to know if it is fat enough, we must implement it. Implementing with performance in mind would be premature optimization. It is much better to implement for optimal architecture, and optimizing only if needed when the structure is frozen.</p>
+<p>A functional programmer, looking at all these abstractions, would probably implement them in a generic form. That way, if she was to solve this problem again with other types, she could just apply the given function. Such a functional implementation might seem harder to write and/or to understand, although only for imperative programmers. But it is easier to test, much much safer to maintain and evolve, and reusable. It might also be slower, but as long as it is fast enough, we don&#8217;t care. And to know if it is fast enough, we must implement it. Implementing with performance in mind would be premature optimization. It is much better to implement for optimal architecture, and optimizing only if needed when the structure is frozen.</p>
 </div>
 <div class="paragraph">
 <p>First, lets start with the types. For input, we can use a <code>List&lt;T&gt;</code>. If we want to start from a comma delimited string, we will just have to convert it to a list of <code>String</code>, which is both trivial and problem specific. We however need a type for output. Defining our own type will allow us to write functional methods, for example for adding elements, making using this type in functions much easier. The standard <code>add</code> method on <code>List</code>, for example, is not functional because it does not return the modified list. Incidentally, it should not even return the modified list, but a new list with the added element. At this time, I don&#8217;t know how to call this type, so I&#8217;ll simply call it <code>Output</code>:</p>
