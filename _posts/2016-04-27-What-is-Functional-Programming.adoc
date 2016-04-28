@@ -60,9 +60,19 @@ public static int length(List<String> line) {
 
 However, looking at this program with a functional mind shows it has a main drawback: it is not as generic as it could be. It takes a list of strings as its input and produces a list of list of strings as its output. It does this well, but it can only do this although most of the work could be fully generic, and thus abstracted for later reuse.
 
-Looking at it with a more generic point of view, here is what this program does: It takes a list of objects and returns a list of list of objects, grouping these objects according to a criteria represented by a condition that should be respected. The condition is that a reduced value of each list, obtained with  a reduction function and an identity object, should satisfy a given predicate.
+Looking at it with a more generic point of view, here is what this program does: It takes a list of objects and returns a list of list of objects, grouping these objects according to a criteria represented by a condition that should be respected. The condition is that a reduced value of each list, obtained with  a reduction function and an identity object, should satisfy a given predicate. Heere is how the generic elements map to the specific elements of the problem:
 
-Here, the list of objects is a list of words. (Although represented by a comma separated string, it is actually a list.) The return value is a list of lines (although represented by a list of comma separated strings). The reduction function is the sum of the length of the strings in a list of strings, plus the number of spaces, which is the number of elements minus 1. The identity (imperative programmers will see this as the starting value for computing the result) is an empty list of list of strings. The predicate takes the reduced value, add the length of the next word + 1 for the space, and returns true if it results in no more than the given max length of a line. In practice, this could be a way to typeset words in lines of a given maximum length.
+* The list of objects is a list of words. (Although represented by a comma separated string, it is actually a list.)
+
+* The return value is a list of lines (although represented by a list of comma separated strings).
+
+* The reduction function is the sum of the length of the strings in a list of strings, plus the number of spaces, which is the number of elements in the list minus 1.
+
+* The identity (imperative programmers will see this as the starting value for computing the result) is an empty list of list of strings.
+
+* The predicate takes the reduced value, add the length of the next word + 1 for the space, and returns `true` if it results in no more than the given max length of a line. 
+
+In practice, this could be a way to typeset words in lines of a given maximum length.
 
 A functional programmer, looking at all these abstractions, would probably implement them in a generic form. That way, if she was to solve this problem again with other types, she could just apply the given function. Such a functional implementation might seem harder to write and/or to understand, although only for imperative programmers. But it is easier to test, much much safer to maintain and evolve, and reusable. It might also be slower, but as far as it is fast enough, we don't care. And to know if it is fat enough, we must implement it. Implementing with performance in mind would be premature optimization. It is much better to implement for optimal architecture, and optimizing only if needed when the structure is frozen.
 
