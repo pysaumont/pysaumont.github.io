@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>Recursive lambdas in Java 8 - Functional Programming in&#160;Java</title>
+    <title>Recursive lambdas in Java 8 - Functional Programming in Java</title>
 
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -28,20 +28,20 @@
     <link rel="stylesheet" type="text/css" href="//pysaumont.github.io/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="https://pysaumont.github.io/2014/09/01/Recursive-lambdas-in-Java-8.html" />
-
+    
     <meta property="og:site_name" content="Functional Programming in Java" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Recursive lambdas in Java 8" />
     <meta property="og:description" content="Many Java programmers believe that is is not possible to create recursive lambdas. This is simply not true. One question that comes back often about Java 8 lambdas is &quot;Can they be recursive?&quot;. The most current answer is simply no,..." />
     <meta property="og:url" content="https://pysaumont.github.io/2014/09/01/Recursive-lambdas-in-Java-8.html" />
     <meta property="article:published_time" content="2014-08-31T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-10-16T06:47:03.462Z" />
-
+    <meta property="article:modified_time" content="2016-04-28T08:00:44.483Z" />
+    
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Recursive lambdas in Java 8" />
     <meta name="twitter:description" content="Many Java programmers believe that is is not possible to create recursive lambdas. This is simply not true. One question that comes back often about Java 8 lambdas is &quot;Can they be recursive?&quot;. The most current answer is simply no,..." />
     <meta name="twitter:url" content="https://pysaumont.github.io/2014/09/01/Recursive-lambdas-in-Java-8.html" />
-
+    
     <script type="application/ld+json">
 {
     "@context": "http://schema.org",
@@ -50,14 +50,14 @@
     "author": {
         "@type": "Person",
         "name": "Pierre-Yves Saumont",
-        "image": "https://avatars.githubusercontent.com/u/10783533?v=3",
+        "image": "https://avatars.githubusercontent.com/u/10126283?v=3",
         "url": "undefined/author/undefined",
-        "sameAs": "Pierre-Yves Saumont"
+        "sameAs": null
     },
     "headline": "Recursive lambdas in Java 8",
     "url": "https://pysaumont.github.io/2014/09/01/Recursive-lambdas-in-Java-8.html",
     "datePublished": "2014-08-31T22:00:00.000Z",
-    "dateModified": "2015-10-16T06:47:03.462Z",
+    "dateModified": "2016-04-28T08:00:44.483Z",
     "description": "Many Java programmers believe that is is not possible to create recursive lambdas. This is simply not true. One question that comes back often about Java 8 lambdas is &quot;Can they be recursive?&quot;. The most current answer is simply no,..."
 }
     </script>
@@ -76,33 +76,33 @@
 
     <header class="panel-cover panel-cover--collapsed " >
       <div class="panel-main">
-
+    
         <div class="panel-main__inner panel-inverted">
         <div class="panel-main__content">
-
+    
             <h1 class="panel-cover__title panel-title"><a href="https://pysaumont.github.io" title="link to homepage for Functional Programming in Java">Functional Programming in Java</a></h1>
             <hr class="panel-cover__divider" />
-            <p class="panel-cover__description">This is the blog associated with my book &quot;Functional Programming in&#160;Java&quot;, published by Manning (https://manning.com/books/functional-programming-in-java).
-
+            <p class="panel-cover__description">This is the blog associated with my book &quot;Functional Programming in Java&quot;, published by Manning (https://manning.com/books/functional-programming-in-java). 
+    
     Functional Programming is not tied to any &quot;functional&quot; language. It is a way of thinking and a paradigm for writing programs. Some languages are more &quot;functional friendly&quot;, and if you intend to write program using the functional paradigm,  you should probably pick one of them... if you can. This blog (and the associated book) is dedicated to those who can&#x27;t.</p>
             <hr class="panel-cover__divider panel-cover__divider--secondary" />
-
+    
             <div class="navigation-wrapper">
-
+    
               <nav class="cover-navigation cover-navigation--primary">
                 <ul class="navigation">
                   <li class="navigation__item"><a href="https://pysaumont.github.io/#blog" title="link to Functional Programming in Java blog" class="blog-button">Blog</a></li>
                 </ul>
               </nav>
-
-
-
+    
+              
+              
               <nav class="cover-navigation navigation--social">
                 <ul class="navigation">
-
-
-
-
+              
+              
+              
+              
                   <!-- Github -->
                   <li class="navigation__item">
                     <a href="http://github.com/fpinjava/fpinjava" title="Github account">
@@ -111,11 +111,11 @@
                     </a>
                   </li>
                   </li>
-
-
-
-
-
+              
+              
+              
+              
+              
                   <!-- Email -->
                   <li class="navigation__item">
                     <a href="mailto:fpinjava@fpinjava.com" title="Email fpinjava@fpinjava.com">
@@ -123,33 +123,33 @@
                       <span class="label">Email</span>
                     </a>
                   </li>
-
+              
                 </ul>
               </nav>
-
-
+              
+    
             </div>
-
+    
           </div>
-
+    
         </div>
-
+    
         <div class="panel-cover--overlay"></div>
       </div>
     </header>
 
     <div class="content-wrapper">
         <div class="content-wrapper__inner">
-
+            
 
   <article class="post-container post-container--single">
 
     <header class="post-header">
       <div class="post-meta">
         <time datetime="01 Sep 2014" class="post-meta__date date">01 Sep 2014</time> &#8226; <span class="post-meta__tags tags"></span>
-        <span class="post-meta__author author"><img src="https://avatars.githubusercontent.com/u/10783533?v=3" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+        <span class="post-meta__author author"><img src="https://avatars.githubusercontent.com/u/10126283?v=3" alt="profile image for Pierre-Yves Saumont" class="avatar post-meta__avatar" /> by Pierre-Yves Saumont</span>
       </div>
-      <h1 class="post-title">Recursive lambdas in&nbsp;Java&nbsp;8</h1>
+      <h1 class="post-title">Recursive lambdas in Java 8</h1>
     </header>
 
     <section class="post">
@@ -271,7 +271,7 @@ static {
 
   </article>
 
-
+  
   <section class="post-comments">
     <div id="disqus_thread"></div>
     <script type="text/javascript">
@@ -286,19 +286,19 @@ static {
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
   </section>
-
+  
 
 
 
             <footer class="footer">
-                <span class="footer__copyright">&copy; 2015. All rights reserved.</span>
+                <span class="footer__copyright">&copy; 2016. All rights reserved.</span>
                 <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
                 <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
             </footer>
         </div>
     </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
       <script type="text/javascript">
         jQuery( document ).ready(function() {
           // change date with ago
@@ -308,11 +308,11 @@ static {
           });
         });
 
-        hljs.initHighlightingOnLoad();
+        hljs.initHighlightingOnLoad();      
       </script>
 
     <script type="text/javascript" src="//pysaumont.github.io/themes/uno/assets/js/main.js?v=1.0.0"></script>
-
+    
 
 </body>
 </html>
