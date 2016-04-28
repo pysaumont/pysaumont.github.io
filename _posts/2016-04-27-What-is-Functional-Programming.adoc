@@ -176,7 +176,7 @@ This prints:
 [magnificent, castle]
 ----
 
-Not only is this implementation fully functional, using only pure functions and never sharing mutable state, but it is also fully generic and may be used as is to solve many other similar problems based on different types.
+This implementation fully functional, using only pure functions and never sharing mutable state, but it is also fully generic and may be used as is to solve many other similar problems based on different types.
 
 ////
 If this is not enough to show the benefit of functional programming, try to change:
@@ -247,7 +247,7 @@ public Function<List<String>, List<List<String>>> group() {
 }
 ----
 
-The first two `group` method may go into the `Output` class, which for the occasion will be renamed `Grouper`, since it is a generic class used for grouping anything.
+The first two `group` methods may go into the `Output` class, which for the occasion will be renamed `Grouper`, since it is a generic class used for grouping anything.
 
 The `f` function, the `p` predicate and the third `group()` method will go in a new `String` specific class that will be called `StringGrouper`. here is the complete generic `Grouper` class:
 
