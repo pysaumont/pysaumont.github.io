@@ -1,0 +1,350 @@
+= What is Functional Programming?
+
+As the author of link:https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java], I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply list differences because functional programming is a different way of thinking. The main difference I generally stress is:
+
+______
+In imperative programming, we write a program which, when executed, gives the solution to the problem we have to solve. In Functional programming, the program is the solution. The main consequence is that you don't have to run the program to know it it is correct or not.
+______
+
+I also use to emphasize something that might not be an essential difference but is fundamental for most functional programmers:
+
+______
+Functional programming is primarily about defining abstractions. As a consequence, most functional programmers, when given a problem to solve, will start by looking for things that might be abstracted. They will then code these abstractions. Some will often not even care to solve the original problem given how trivial it becomes once every possible abstraction have been extracted and implemented separately.
+______
+
+On of the most famous example, is the abstraction of all control structures. Functional Programming do not use `for` and `while` loops as imperative languages do. Loops are abstracted into functions, so, as a functional programmer, you will probably never see them.
+
+But the easiest way to explain things (at least to imperative programmers) is to give an example. I recently had to make such an example to explain how Functional Programming could be used to solve a real business problem.
+
+The problem is to place words on lines, never exceeding the maximum line length. Spaces between words on a line are counted for one character. We start with a List<String> (a list of words) and should end with a List<List<String>> (a list of lines).
+
+This problem is easy to solve with a very simple imperative program, for example:
+
+[source, java]
+----
+public static void main(String... args) {
+
+  int maxLineLength = 20;
+  List<String> words = Arrays.asList("Once", "upon", "a", "time", "there", "was", "a", "prince", "who", "lived", "in", "a", "magnificent", "castle");
+  List<List<String>> lines = new ArrayList<>();
+  List<String> currentLine = new ArrayList<>();
+  
+  for(String word : words) {
+    if (length(currentLine) + word.length() <= maxLineLength) {
+      currentLine.add(word);
+    } else {
+      lines.add(currentLine);
+      currentLine = new ArrayList<>();
+      currentLine.add(word);
+    }
+  }
+  if (! currentLine.isEmpty()) {
+    lines.add(currentLine);
+  }
+  for(List<String> line : lines) {
+    System.out.println(line);
+  }
+}
+
+public static int length(List<String> line) {
+  int length = 0;
+  for (String word : line) {
+    length += word.length() + 1;
+  }
+  return length;
+}
+----
+
+== First functional implementation
+
+However, looking at this program with a functional mind shows it has a main drawback: it is not as generic as it could be. It takes a list of strings as its input and produces a list of list of strings as its output. It does this well, but it can only do this although most of the work could be fully generic, and thus abstracted for later reuse.
+
+Looking at it with a more generic point of view, here is what this program does: It takes a list of objects and returns a list of list of objects, grouping these objects according to a criteria represented by a condition that should be respected. The condition is that a reduced value of each list, obtained with  a reduction function and an identity object, should satisfy a given predicate.
+
+Here, the list of objects is a list of words. (Although represented by a comma separated string, it is actually a list.) The return value is a list of lines (although represented by a list of comma separated strings). The reduction function is the sum of the length of the strings in a list of strings. The identity is an empty list of list of strings. The predicate takes the reduced value, add the length of the next word + 1 for the space, and returns true if it results in no more than the given max length of a line. In practice, this could be a way to typeset words in lines of a given maximum length.
+
+A functional programmer, looking at all these abstractions, would probably implement them in a generic form. That way, if she was to solve this problem again with other types, she could just apply the given function. Such a functional implementation might seem harder to write and/or to understand, although only for imperative programmers. But it is easier to test, much much safer to maintain and evolve, and reusable. It might also be slower, but as far as it is fast enough, we don't care. And to know if it is fat enough, we must implement it. Implementing with performance in mind would be premature optimization. It is much better to implement for optimal architecture, and optimizing only if needed when the structure is frozen.
+
+First, lets start with the types. For input, we can use a `List<T>`. If we want to start from a comma delimited string, we will just have to convert it to a list of `String`, which is both trivial and problem specific. We however need a type for output. Defining our own type will allow us to write functional methods, for example for adding elements, making using this type in functions much easier. The standard `add` method on `List`, for example, is not functional because it does not return the modified list. Incidentally, it should not even return the modified list, but a new list with the added element. At this time, I don't know how to call this type, so I'll simply call it `Output`:
+
+[source, java]
+----
+public static class Output<T, U> {
+
+  private final List<List<T>> values;
+  private final Function<Output<T, U>, U> reduce;
+
+  public Output(Function<Output<T, U>, U> reduce) {
+    this.values = new ArrayList<>();
+    this.reduce = reduce;
+  }
+
+  public Output(List<List<T>> values, Function<Output<T, U>, U> reduce) {
+    this.values = new ArrayList<>(values);
+    this.reduce = reduce;
+  }
+
+  public List<List<T>> values() {
+    return values;
+  }
+
+  public List<T> last() {
+    return values.get(values.size() - 1);
+  }
+
+  public Output<T, U> addToLast(T t) {
+    Output<T, U> result = values.isEmpty() 
+      ? new Output<>(new ArrayList<>(), this.reduce) 
+      : new Output<>(values, this.reduce);
+    result.last().add(t);
+    return result;
+  }
+
+  public Output<T, U> addToNew(T t) {
+    values.add(new ArrayList<>());
+    return addToLast(t);
+  }
+
+  public boolean isEmpty() {
+    return values.isEmpty();
+  }
+
+  public U reduce() {
+    return reduce.apply(this);
+  }
+
+  public static <T, U> U reduceNoParallel(U identity, BiFunction<U, T, U> f, List<T> list) {
+    return list.stream().reduce(identity, f, (a, b) -> a);
+  }
+}
+----
+
+As you can see, it contains a `List<List<T>`, which will be our result. But it also contains a function from `Output<T, U>` to `U`. This is the function that is used to reduce an element  of type `List<T>` to a single value of type `U`. Nevertheless, this function takes an `Output<T, U>` as its argument (instead of a `List<T>`) and applies the reduction to the last list in the `List<List<T>>` member. The methods `addToNew` and `addToLast` perform the addition of an element while taking care of defensive copy and returning the result. This would not be necessary if we where using functional immutable data structures.
+
+To simplify use, I added the `reduceNoParallel` helper method taking care of stream reduction since parallelization is not wanted (nor possible!). The “combiner” third argument, as Java 8 calls it, is a `BinaryOperator` used to aggregate the results returned by parallel threads when automatic parallelization is used. We can't use parallelization in this case, but `Stream` unfortunately does not include a `reduce` method without this `BinaryOperator`. Of course, this would not work with parallelization, but it is not a problem since it is encapsulated in our `reduceNoParallel` method. This method is `static` and could be put anywhere, but since it is generic, I put it in the `Output` class.
+
+To use this class, we must first define the reducing function that we will be used to instantiate an `Output`: I called this function `lengthSum`:
+
+[source, java]
+----
+Function<Output<String, Integer>, Integer> lengthSum = output -> output.last().stream().reduce(0, (a, b) -> a + b.length(), (x, y) -> x + y);
+---- 
+
+The identity element will be defined as:
+
+[source, java]
+----
+new Output<>(lengthSum);
+----
+
+But we will not share it, as it is mutable. We will create a new one each time we need one.
+
+Now, we can define our main function (the core of our program!):
+
+[source, java]
+----
+BiFunction<Output<String, Integer>, String, Output<String, Integer>> f = (output, string) -> output.isEmpty() || output.reduce() + string.length() > MAX_LENGTH
+    ? output.addToNew(string)
+    : output.addToLast(string);
+---- 
+
+With these two elements, we can solve our business problem (givent that we give a value of 20 to `MAX_LENGTH`):
+
+[source, java]
+----
+List<String> words = Arrays.asList("Once", "upon", "a", "time", "there", "was", "a", "prince","who", "lived", "in", "a", "magnificent", "castle");
+Output.reduceNoParallel(new Output<>(lengthSum), f, words).values().stream().forEach(System.out::println);
+----
+
+This prints:
+
+----
+[Once, upon, a, time]
+[there, was, a, prince]
+[who, lived, in, a]
+[magnificent, castle]
+----
+
+Not only is this implementation fully functional, using only pure functions and never sharing mutable state, but it is also fully generic and may be used as is to solve many other similar problems based on different types.
+
+////
+If this is not enough to show the benefit of functional programming, try to change:
+
+List<String> input1 = Arrays.asList("123", "456", "78901", "abc", "def");
+System.out.println(Output.reduceNoParallel(new Output<>(lengthSum)
+, f, input1).values());
+List<String> input2 = Arrays.asList("123", "456", "789", "abc", "def");
+System.out.println(Output.reduceNoParallel(new Output<>(lengthSum)
+, f, input2).values());
+
+to:
+
+[source, java] ---- Output<String, Integer> identity = new Output<>(lengthSum);
+---- 
+
+List<String> input1 = Arrays.asList("123", "456", "78901", "abc",
+ "def");System.out.println(Output.reduceNoParallel(identity, f, input1).values());
+List<String> input2 = Arrays.asList("123", "456", "789", "abc", "def");
+System.out.println(Output.reduceNoParallel(identity, f, input2).values());
+
+The program now prints:
+
+[[123, 456], [78901, abc], [def]]
+[[123, 456, 123], [456, 789, abc], [def]]
+
+Because we are using mutable data structures, and although we tried to take great care of this, there is now a bug. Can you find it? If we add been using immutable data structures as I explain in my book “Functional Programming in Java”, we would never have had this problem.
+////
+
+== Pushing abstraction to the limit
+
+This example works fine, but we may push abstraction much further, reducing the client code to the simplest expression. What we need to do is abstracting again the client code in order to create a specific type for strings. We may also push abstraction in the generic part. This method:
+
+[source, java]
+----
+BiFunction<Output<String, Integer>, String, Output<String, Integer>> f = (output, string) -> output.isEmpty() || output.reduce() + string.length() > MAX_LENGTH
+    ? output.addToNew(string)
+    : output.addToLast(string);
+----
+
+Could be abstracted into:
+
+[source, java]
+----
+public static <T, U> Function<List<T>, List<List<T>>> group(U identity, BiFunction<U, T, U> f, BiFunction<U, T, Boolean> p) {
+  return list -> group(identity, f, p, list);
+}
+
+public static <T, U> List<List<T>> group(U identity, BiFunction<U, T, U> f, BiFunction<U, T, Boolean> p, List<T> list) {
+  Function<Grouper<T, U>, U> g = output -> reduceNoParallel(identity, f, output.last());
+  BiFunction<Grouper<T, U>, T, Grouper<T, U>> h = (output, t) -> output.isEmpty() || p.apply(output.reduce(), t)
+      ? output.addToNew(t)
+      : output.addToLast(t);
+  return reduceNoParallel(new Grouper<>(g), h, list).values();
+}
+----
+
+And we could call the `group` method with the following parameters:
+
+[source, java]
+----
+private final BiFunction<Integer, String, Integer> f = (a, b) -> a + b.length();
+
+private final BiFunction<Integer, String, Boolean> p;
+
+public Function<List<String>, List<List<String>>> group() {
+  return Grouper.group(0, f, p);
+}
+----
+
+The first two `group` method may go into the `Output` class, which for the occasion will be renamed `Grouper`, since it is a generic class used for grouping anything.
+
+The `f` function, the `p` predicate and the third `group()` method will go in a new `String` specific class that will be called `StringGrouper`. here is the complete generic `Grouper` class:
+
+[source, java]
+----
+public class Grouper<T, U> {
+
+  private final List<List<T>> values;
+  private final Function<Grouper<T, U>, U> reduce;
+
+  public Grouper(Function<Grouper<T, U>, U> reduce) {
+    this.values = new ArrayList<>();
+    this.reduce = reduce;
+  }
+
+  public Grouper(List<List<T>> values, Function<Grouper<T, U>, U> reduce) {
+    this.values = new ArrayList<>(values);
+    this.reduce = reduce;
+  }
+
+  public List<List<T>> values() {
+    return values;
+  }
+
+  public List<T> last() {
+    return values.get(values.size() - 1);
+  }
+
+  public Grouper<T, U> addToLast(T t) {
+    Grouper<T, U> result = values.isEmpty()
+        ? new Grouper<>(new ArrayList<>(), this.reduce)
+        : new Grouper<>(values, this.reduce);
+    result.last().add(t);
+    return result;
+  }
+
+  public Grouper<T, U> addToNew(T t) {
+    values.add(new ArrayList<>());
+    return addToLast(t);
+  }
+
+  public boolean isEmpty() {
+    return values.isEmpty();
+  }
+
+  public U reduce() {
+    return reduce.apply(this);
+  }
+
+  public static <T, U> U reduceNoParallel(U identity, BiFunction<U, T, U> f, List<T> list) {
+    return list.stream().reduce(identity, f, (a, b) -> {throw new IllegalStateException("Parallelization is forbidden.");});
+  }
+
+  public static <T, U> Function<List<T>, List<List<T>>> group(U identity, BiFunction<U, T, U> f, BiPredicate<U, T> p) {
+    return list -> group(identity, f, p, list);
+  }
+
+  public static <T, U> List<List<T>> group(U identity, BiFunction<U, T, U> f, BiPredicate<U, T> p, List<T> list) {
+    Function<Grouper<T, U>, U> g = output -> reduceNoParallel(identity, f, output.last());
+    BiFunction<Grouper<T, U>, T, Grouper<T, U>> h = (output, t) -> output.isEmpty() || p.test(output.reduce(), t)
+        ? output.addToNew(t)
+        : output.addToLast(t);
+    return reduceNoParallel(new Grouper<>(g), h, list).values();
+  }
+}
+----
+
+And here is the specific `StringGrouper` class:
+
+[source, java]
+----
+public class StringGrouper {
+
+  private final BiFunction<Integer, String, Integer> f = (a, b) -> a + b.length();
+
+  private final BiPredicate<Integer, String> p;
+
+  public Function<List<String>, List<List<String>>> group() {
+    return Grouper.group(0, f, p);
+  }
+
+  public StringGrouper(int length) {
+    p = (i, s) -> i + s.length() > length;
+  }
+}
+----
+
+Note that the `StringGrouper.group()` method returns a partially applied function. The `identity`, `f` and `p` parameters have been applied, leaving us with a function from List<String> to List<List<String>>. This makes sense, since we will probably have to process many lists with the same configuration.
+
+Now, the client code is awfully simple:
+
+[source, java]
+----
+public class Client {
+
+  public static void main(String...args) {
+
+    StringGrouper grouper = new StringGrouper(10);
+
+    List<String> words = Arrays.asList("123", "456", "789", "abc", "def");
+
+    grouper.group().apply(words).forEach(System.out::println);
+  }
+}
+----
+
+Note that the grouping function (returned by `grouper.group()`) may be applied to any number of lists of strings, as long as the maximum line length remains the same.
+
+== Conclusion
+
+Writing the Grouper class may seem intimidating, but this is "simply" Java 8. No tricks. It would be much simpler with a good functional library as the one I describe in my book link:https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java], to be published thiis summer by Manning, and already available in Manning Early Access Program (MEAP). I also explain all the functional techniques that are put to work and can as well be used with standard Java 8 functional constructs (Function(s), Stream, Optional...)
