@@ -1,10 +1,10 @@
 = What is Functional Programming?
 :published_at: 2016-04-27
 
-As the author of link:https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java], I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply list differences because functional programming is a different way of thinking. The main difference I generally stress is:
+Being the author of link:https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java], I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list of differences because functional programming starts with a different way of thinking. The main difference I generally stress is:
 
 ______
-In imperative programming, we write a program which, when executed, gives the solution to the problem we have to solve. In Functional programming, the program is the solution. The main consequence is that you don't have to run the program to know it it is correct or not.
+In imperative programming, we write a program which, when executed, gives the solution to the problem we have to solve. In Functional programming, the program is the solution. The main consequence is that you don't have to run the program to know it if is correct or not.
 ______
 
 I also use to emphasize something that might not be an essential difference but is fundamental for most functional programmers:
