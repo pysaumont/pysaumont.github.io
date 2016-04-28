@@ -5,7 +5,7 @@
 == ¿Qué es HubPress?
 image::http://hubpress.io/img/editor.png[]
 
-HubPress es una herramienta de código abierto, que puedes usar para construir un enriquecido blog basado en AsciiDoc y utilizando GitHub Pages!
+HubPress  es una herramienta de código abierto, que puedes usar para construir un enriquecido blog basado en AsciiDoc y utilizando GitHub Pages!
 
 Creado y mantenimo por http://github.com/anthonny[Anthonny Quérouil] (twitter http://twitter.com/anthonny_q[@anthonny_q]).
 
