@@ -35,7 +35,7 @@
     <meta property="og:description" content="Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html" />
     <meta property="article:published_time" content="2016-04-26T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-04-28T09:44:47.237Z" />
+    <meta property="article:modified_time" content="2016-04-28T09:47:58.633Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="What is Functional Programming?" />
@@ -57,7 +57,7 @@
     "headline": "What is Functional Programming?",
     "url": "https://pysaumont.github.io/2016/04/27/What-is-Functional-Programming.html",
     "datePublished": "2016-04-26T22:00:00.000Z",
-    "dateModified": "2016-04-28T09:44:47.237Z",
+    "dateModified": "2016-04-28T09:47:58.633Z",
     "description": "Being the author of Functional Programming in Java, I am often asked to define as concisely as possible what are the differences between functional programming and imperative (a.k.a. “traditional”) programming. It is difficult to simply give a list..."
 }
     </script>
@@ -317,7 +317,7 @@ public static int length(List&lt;String&gt; line) {
 <p>As you can see, it contains a <code>List&lt;List&lt;T&gt;</code>, which will be our result. But it also contains a function from <code>Output&lt;T, U&gt;</code> to <code>U</code>. This is the function that is used to reduce an element  of type <code>List&lt;T&gt;</code> to a single value of type <code>U</code>. Note however that this function takes an <code>Output&lt;T, U&gt;</code> as its argument (instead of a <code>List&lt;T&gt;</code>) and applies the reduction to the last list in the <code>List&lt;List&lt;T&gt;&gt;</code> member. The methods <code>addToNew</code> and <code>addToLast</code> perform the addition of an element while taking care of defensive copy and returning the result. This would not be necessary if we where using functional immutable data structures which Java has not (but you can find how to create them in my book, <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, or you can use one of the available functional Java libraries.</p>
 </div>
 <div class="paragraph">
-<p>To simplify use, I added the <code>reduceNoParallel</code> helper method taking care of stream reduction since parallelization is not wanted (nor possible!). The “combiner” third argument, as Java 8 calls it, is a <code>BinaryOperator</code> used to aggregate the results returned by parallel threads when automatic parallelization is used. We can&#8217;t use parallelization in this case, but <code>Stream</code> unfortunately does not include a <code>reduce</code> method without this <code>BinaryOperator</code>. Of course, this would not work with parallelization, but it is not a problem since it is encapsulated in our <code>reduceNoParallel</code> method. This method is <code>static</code> and could be put anywhere, but since it is generic, I put it in the <code>Output</code> class.</p>
+<p>To simplify use, I added the <code>reduceNoParallel</code> helper method taking care of stream reduction since parallelization is not wanted (nor possible!). The “combiner” third argument, as Java 8 calls it, is a <code>BinaryOperator</code> used to aggregate the results returned by parallel threads when automatic parallelization is used. We can&#8217;t use parallelization in this case, but <code>Stream</code> unfortunately does not include a <code>reduce</code> method without this <code>BinaryOperator</code>. This would throw an exception if parallelization was used, but ther is no risk since it is encapsulated in our <code>reduceNoParallel</code> method. This method is <code>static</code> and could be put anywhere, but since it is generic, I put it in the <code>Output</code> class.</p>
 </div>
 <div class="paragraph">
 <p>To use this class, we must first define the reducing function that we will be used to instantiate an <code>Output</code>: I called this function <code>lengthSum</code>:</p>
