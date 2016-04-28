@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Stack safe recursion in&amp;#160;Java - Functional Programming in Java</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Stack safe recursion in&amp;#160;Java">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Stack safe recursion in&amp;#160;Java">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+
+    <link rel="stylesheet" type="text/css" href="//pysaumont.github.io/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="https://pysaumont.github.io/2014/12/03/Stack-safe-recursion-in160-Java.html" />
+    
+    <meta property="og:site_name" content="Functional Programming in Java" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Stack safe recursion in&amp;#160;Java" />
+    <meta property="og:description" content="In this article, excerpted from my book Functional Programming in Java, I explain how to use recursion while avoiding the risk of a StackOverflowException. Corecursion is composing computing steps by using the output of one step as the input of..." />
+    <meta property="og:url" content="https://pysaumont.github.io/2014/12/03/Stack-safe-recursion-in160-Java.html" />
+    <meta property="article:published_time" content="2014-12-02T23:00:00.000Z" />
+    <meta property="article:modified_time" content="2016-04-28T07:59:05.727Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Stack safe recursion in&amp;#160;Java" />
+    <meta name="twitter:description" content="In this article, excerpted from my book Functional Programming in Java, I explain how to use recursion while avoiding the risk of a StackOverflowException. Corecursion is composing computing steps by using the output of one step as the input of..." />
+    <meta name="twitter:url" content="https://pysaumont.github.io/2014/12/03/Stack-safe-recursion-in160-Java.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Functional Programming in Java",
+    "author": {
+        "@type": "Person",
+        "name": "Pierre-Yves Saumont",
+        "image": "https://avatars.githubusercontent.com/u/10126283?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": null
+    },
+    "headline": "Stack safe recursion in&amp;#160;Java",
+    "url": "https://pysaumont.github.io/2014/12/03/Stack-safe-recursion-in160-Java.html",
+    "datePublished": "2014-12-02T23:00:00.000Z",
+    "dateModified": "2016-04-28T07:59:05.727Z",
+    "description": "In this article, excerpted from my book Functional Programming in Java, I explain how to use recursion while avoiding the risk of a StackOverflowException. Corecursion is composing computing steps by using the output of one step as the input of..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Functional Programming in Java" href="https://pysaumont.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+</head>
+<body class="post-template no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="https://pysaumont.github.io" title="link to homepage for Functional Programming in Java">Functional Programming in Java</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">This is the blog associated with my book &quot;Functional Programming in Java&quot;, published by Manning (https://manning.com/books/functional-programming-in-java). 
+    
+    Functional Programming is not tied to any &quot;functional&quot; language. It is a way of thinking and a paradigm for writing programs. Some languages are more &quot;functional friendly&quot;, and if you intend to write program using the functional paradigm,  you should probably pick one of them... if you can. This blog (and the associated book) is dedicated to those who can&#x27;t.</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="https://pysaumont.github.io/#blog" title="link to Functional Programming in Java blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+                  <!-- Github -->
+                  <li class="navigation__item">
+                    <a href="http://github.com/fpinjava/fpinjava" title="Github account">
+                      <i class='icon icon-social-github'></i>
+                      <span class="label">Github</span>
+                    </a>
+                  </li>
+                  </li>
+              
+              
+              
+              
+              
+                  <!-- Email -->
+                  <li class="navigation__item">
+                    <a href="mailto:fpinjava@fpinjava.com" title="Email fpinjava@fpinjava.com">
+                      <i class='icon icon-mail'></i>
+                      <span class="label">Email</span>
+                    </a>
+                  </li>
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="03 Dec 2014" class="post-meta__date date">03 Dec 2014</time> &#8226; <span class="post-meta__tags tags"></span>
+        <span class="post-meta__author author"><img src="https://avatars.githubusercontent.com/u/10126283?v=3" alt="profile image for Pierre-Yves Saumont" class="avatar post-meta__avatar" /> by Pierre-Yves Saumont</span>
+      </div>
+      <h1 class="post-title">Stack safe recursion in&amp;#160;Java</h1>
+    </header>
+
+    <section class="post">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this article, excerpted from my book <a href="https://manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, I explain how to use recursion while avoiding the risk of a <code>StackOverflowException</code>.</p>
+</div>
+<div class="paragraph">
+<p>Corecursion is composing computing steps by using the output of one step as the input of the next one starting with the first step. Recursion is the same operation, but starting with the last step. In this case, we have to delay evaluation until we encounter a base condition (corresponding to the first step of corecursion).</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say we have only two instructions in our programming language: incrementation (adding 1 to a value) and decrementation (subtracting 1 from a value). Let&#8217;s implement addition by composing these instructions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_corecursive_and_recursive_addition_examples">Corecursive and recursive addition examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to add two numbers, <code>x</code> and <code>y</code>, we can do the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if <code>y == 0</code>, return <code>x</code></p>
+</li>
+<li>
+<p>otherwise, increment <code>x</code>, decrement <code>y</code> and start again.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This may be written in Java as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static int add(int x, int y) {
+  while(y &gt; 0) {
+    x = ++x;
+    y = --y;
+  }
+  return x;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or simpler:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static int add(int x, int y) {
+  while(y-- &gt; 0) {
+    x = ++x;
+  }
+  return x;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that there is no problem with using the parameters <code>x</code> and <code>y</code> directly, since in Java, all parameters are passed by value. Also note that we have used post decrementation to simplify coding. We could however have used pre decrementation by slightly changing the condition, thus switching form iterating from y to 1 to iterating from y 1 to 0:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static int add(int x, int y) {
+  while(--y &gt;= 0) {
+    x = ++x;
+  }
+  return x;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The recursive version is trickier, but still very simple:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static int addRec(int x, int y) {
+  return y == 0
+      ? x
+      : addRec(++x, --y);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both approaches seem to work but if we try the recursive version with big numbers, we may get a surprise. Although</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">addRec(10000, 3);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>produces the expected result 10003, switching the parameters, like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">addRec(3, 10000);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>produces a <code>StackOverflowException</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_is_recursion_implemented_in_java">How is recursion implemented in Java?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To understand what’s happening, we must look at how Java handles method calls. When a method is called, Java suspends what it is currently doing and pushes the environment on the stack to make place for the called method execution. When this method returns, Java pops the stack to restore the environment and resume program execution. If we call one method after the other, the stack will always hold at least one of these methods call environment.</p>
+</div>
+<div class="paragraph">
+<p>But methods are not only composed by calling them one after the other. Methods call methods. If <code>method1</code> calls <code>method2</code> as part of its implementation, Java again suspends <code>method1</code> execution, pushes the current environment on the stack, and starts executing <code>method2</code>. When <code>method2</code> returns, Java pops the last pushed environment from the stack and resume execution (of <code>method1</code> in our case). When <code>method1</code> completes, Java pops again from the stack and resume what it was doing before calling this method.</p>
+</div>
+<div class="paragraph">
+<p>Of course, method calls may be deeply nested. Is there a limit to method nesting depth? Yes. The limit is the size of the stack. In current situations, the limit is somewhere around a few thousands of levels, although it is possible to increase this limit by configuring the stack size. However, the same stack size is used for all threads, so increasig the stack size for a single computation will generally waste space. Default stack size varies between 320k and 1024k depending on the version of Java and the system used. For a 64 bits Java 8 program with minimal stack usage, the maximum number of nested method calls is about 7,000. Generally, we don&#8217;t need more, excepted in very specific cases. One such case is recursive method calls.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tail_call_elimination_tce">Tail Call Elimination (TCE)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Pushing the environment on the stack seems necessary in order to allow resuming computation after the called method returns. But not always. When the call to a method is the last thing to do in the calling method, there is nothing to resume when it returns, so it should be OK to resume directly with the caller of the current method instead of the current method itself. A method call occurring in last position, meaning as the last thing to do before returning, is called a <em>tail call</em>. Avoiding pushing the environment onto the stack to resume method processing after a tail call is an optimization technique known as <em>Tail Call Elimination</em> (TCE). Unfortunately, Java does not implement TCE.</p>
+</div>
+<div class="paragraph">
+<p>Tail Call Elimination is sometimes called <em>Tail Call Optimization</em> (TCO). TCE is generally an optimization, and we may live without it. However, when it comes to recursive function calls, TCE is no longer an optimization. It is a mandatory feature. That&#8217;s why TCE is a better term than TCO when it comes to handling recursion.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tail_recursive_methods_and_functions">Tail recursive methods and functions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most functional languages implement TCE. However, TCE is not enough to make every recursive call possible. To be candidate for TCE, the recursive call must be the last thing the method will have to do. Think of the following method computing the sum of the elements of a list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static Integer sum(List&lt;Integer&gt; list) {
+  return list.isEmpty()
+      ? 0
+      : head(list) + sum(tail(list));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method uses the <code>head()</code> and <code>tail()</code> methods. Note that the recursive call to the <code>sum</code> method is not the last thing the method has to do. The four last things the method does are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>calling the <code>head</code> method</p>
+</li>
+<li>
+<p>calling the <code>tail</code> method</p>
+</li>
+<li>
+<p>calling the <code>sum</code> method</p>
+</li>
+<li>
+<p>adding the result of <code>head</code> and the result of <code>sum</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Even if we had TCE, we would not be able to use this method with lists of 10,000 elements, because the recursive call is not in tail position. However, this method may be rewritten in order to put the call to <code>sum</code> in tail position:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static Integer sum_(List&lt;Integer&gt; list) {
+  return sumTail(list, 0);
+}
+
+static Integer sumTail(List&lt;Integer&gt; list, int acc) {
+  return list.isEmpty()
+      ? acc
+      : sumTail(tail(list), acc + head(list));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, the <code>sumTail</code> method is tail recursive and can be optimized through TCE.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstracting_recursion">Abstracting recursion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>So far, so good, but why bother with all this since Java does not implement TCE? Well, Java does not implement it, but we can do without it. All we need to do is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Representing unevaluated method calls</p>
+</li>
+<li>
+<p>Storing them in a stack-like structure until we encounter a terminal condition</p>
+</li>
+<li>
+<p>Evaluating the calls in LIFO order</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Most examples of recursive methods use the <em>Factorial</em> function as an example. The others use the <em>Fibonacci</em> series example. To start our study, we will use the much simpler recursive addition method.</p>
+</div>
+<div class="paragraph">
+<p>Recursive and corecursive functions are both functions where <em>f(n)</em> is a composition of <em>f(n 1)</em>, <em>f(n 2)</em>, <em>f(n 3)</em> and so on until a terminal condition is encountered (generally <em>f(0)</em> or <em>f(1)</em>). Remember that in traditional programming, composing generally means composing results of evaluations. This means that composing function <em>f(a)</em> and <em>g(a)</em> consists in evaluating <em>g(a)</em> then using the result as the input to <em>f</em>. It does not have to be done that way. You could develop a <code>compose</code> method to compose functions, and a <code>higherCompose</code> function to do the same thing. Neither of this methods or this function would evaluate the composed functions. They would only produce another function that could be applied later.</p>
+</div>
+<div class="paragraph">
+<p>Recursion and corecursion are similar, although with a difference. We create a list of function calls instead of a list of functions. With corecursion, each step is terminal, so it may be evaluated in order to get the result and use it as input for the next step. With recursion, we start from the other end. So we have to put non evaluated calls in the list until we find a terminal condition, from which we can process the list in reverse order. In other words, we stack the steps (without evaluating them) until the last one is found, and then we process the stack in reverse order (last in first out), evaluating each step and using the result as the input for the next (in fact the previous) one.</p>
+</div>
+<div class="paragraph">
+<p>The problem we have is that Java uses the thread stack for this, and its capacity is very limited. Typically, the stack will overflow after between 6,000 and 7,000 steps.</p>
+</div>
+<div class="paragraph">
+<p>What we have to do is to create a function or a method returning a non evaluated step. To represent a step in the calculation, we will use an abstract class called <code>TailCall</code> (since we want to represent a call to a method that appears in tail position).</p>
+</div>
+<div class="paragraph">
+<p>This <code>TailCall</code> abstract class will have two sub classes: one will represent an intermediate call, when the processing of one step is suspended to call the new method for evaluating the next step. This will be represented by a class named <code>Suspend</code>. It will be instantiated with a <code>Supplier&lt;TailCall&gt;&gt;</code>, which will represent the next recursive call. This way, instead of putting all <code>TailCalls instances in a list, we will construct a linked list by linking each `TailCall</code> with the next. The benefit of this approach is that such a linked list is in fact a stack, offering constant time insertion as well as constant time access to the last inserted element, which is optimal for a LIFO structure.</p>
+</div>
+<div class="paragraph">
+<p>The second implementation will represent the last call, which is suppose to return the result. So we will call it <code>Return</code>. It will not hold a link to the next <code>TailCall</code>, since there is nothing next, but it will hold the result. Here is what we get:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import java.util.function.Supplier;
+
+public abstract class TailCall&lt;T&gt; {
+
+  public static class Return&lt;T&gt; extends TailCall&lt;T&gt; {
+
+    private final T t;
+
+    public Return(T t) {
+      this.t = t;
+    }
+  }
+
+  public static class Suspend&lt;T&gt; extends TailCall&lt;T&gt; {
+
+    private final Supplier&lt;TailCall&lt;T&gt;&gt; resume;
+
+    private Suspend(Supplier&lt;TailCall&lt;T&gt;&gt; resume) {
+      this.resume = resume;
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To handle these classes, we will need some methods: one to return the result, one to return the next call, and one helper method to determine if a <code>TailCall</code> is a <code>Suspend</code> or a <code>Return</code>. We could avoid this last method, but we would have to use <code>instanceof</code> to do the job, which is ugly. The three methods will be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public abstract TailCall&lt;T&gt; resume();
+
+public abstract T eval();
+
+public abstract boolean isSuspend();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>resume</code> method will have no implementation in <code>Return</code> and will just throw a <code>RuntimeException</code>. The user of our API should not be in a situation to call this method, so if it is eventually called, it will be a bug and we will stop the application. In the <code>Suspend</code> class, it will return the next <code>TailCall</code>.</p>
+</div>
+<div class="paragraph">
+<p>The eval method will return the result stored in the <code>Return</code> class. In our first version, it will throw a <code>RuntimeException</code> if called on the <code>Suspend</code> class.</p>
+</div>
+<div class="paragraph">
+<p>The <code>isSuspend</code> method will simply return <code>true</code> in <code>Suspend</code> and <code>false</code> in <code>Return</code>. Listing 1 shows this first version.</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 1 The <code>TailCall</code> abstract class and its two sub classes</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import java.util.function.Supplier;
+
+public abstract class TailCall&lt;T&gt; {
+
+  public abstract TailCall&lt;T&gt; resume();
+
+  public abstract T eval();
+
+  public abstract boolean isSuspend();
+
+  public static class Return&lt;T&gt; extends TailCall&lt;T&gt; {
+
+    private final T t;
+
+    public Return(T t) {
+      this.t = t;
+    }
+
+    @Override
+    public T eval() {
+      return t;
+    }
+
+    @Override
+    public boolean isSuspend() {
+      return false;
+    }
+
+    @Override
+    public TailCall&lt;T&gt; resume() {
+      throw new IllegalStateException("Return has no resume");
+    }
+  }
+
+  public static class Suspend&lt;T&gt; extends TailCall&lt;T&gt; {
+
+    private final Supplier&lt;TailCall&lt;T&gt;&gt; resume;
+
+    public Suspend(Supplier&lt;TailCall&lt;T&gt;&gt; resume) {
+      this.resume = resume;
+    }
+
+    @Override
+    public T eval() {
+      throw new IllegalStateException("Suspend has no value");
+    }
+
+    @Override
+    public boolean isSuspend() {
+      return true;
+    }
+
+    @Override
+    public TailCall&lt;T&gt; resume() {
+      return resume.get();
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, to make our recursive method add to work with any number of steps (within the limits of available memory size!), we have little changes to make. Starting with our original method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static int add(int x, int y) {
+  return y == 0
+      ? x
+      : add(++x, --y)  ;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We just have to make the modifications shown in listing 2.</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 2 The modified recursive method</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static TailCall&lt;Integer&gt; add(int x, int y) {  <i class="conum" data-value="1"></i><b>(1)</b>
+  return y == 0
+      ? new TailCall.Return&lt;&gt;(x)   <i class="conum" data-value="2"></i><b>(2)</b>
+      : new TailCall.Suspend&lt;&gt;(() -&gt; add(x + 1, y – 1));  <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Method now returns a <code>TailCall</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In terminal condition, a <code>Return</code> is returned</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>In non terminal condition, a <code>Suspend</code> is returned</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Our method now returns a <code>TailCall&lt;Integer&gt;</code> instead of an <code>int</code> (&lt;1&gt;). This return value may be a <code>Return&lt;Integer&gt;</code> (&lt;2&gt;) if we have reached terminal condition, or a <code>Suspend&lt;Integer&gt;</code> (&lt;3&gt;) if we have not yet. The <code>Return</code> is instantiated with the result of the computation (which is <code>x</code>, since <code>y</code> is 0) and the <code>Suspend</code> is instantiated with a <code>Supplier&lt;TailCall&lt;Integer&gt;&gt;</code>, which is the next step of the computation in terms of execution sequence, or the previous in terms of calling sequence. It is very important to understand that the Return corresponds to the last step in terms of method call, but to the first step in terms of evaluation. Also note that we have slightly changed the evaluation, replacing <code>++x</code> and <code>--y</code> by <code>x + 1</code> and <code>y – 1</code>. This was necessary because we are using a closure, which works only if closed over variables are effectively final. This is cheating, but not so much. We could have created and called two methods <code>dec</code> and <code>inc</code> using the original operators.</p>
+</div>
+<div class="paragraph">
+<p>What this method returns is a chain of <code>TailCall</code> instances, all being <code>Suspend</code> instances except the last one, which is a <code>Return</code>.</p>
+</div>
+<div class="paragraph">
+<p>So far so good, but obviously, this method is not a drop in replacement for the original one. Not a big deal! The original method was used as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">System.out.println(add(x, y))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can use our new method like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">TailCall&lt;Integer&gt; tailCall = add(3, 100000000);
+while(tailCall .isSuspend()) {
+  tailCall = tailCall.resume();
+}
+System.out.println(tailCall.eval());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Doesn&#8217;t it look nice? Well if you feel somewhat frustrated, I can understand. You thought we would just use a new method in place of the old one, in a transparent manner. We seem to be far from this. But we can make things much better with little efforts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_drop_in_replacement_for_stack_base_recursive_methods">Drop in replacement for stack base recursive methods</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the beginning of the previous section, we said that the user of our recursive API would have no opportunity to mess with the <code>TailCall</code> instances by calling resume on a <code>Return</code> or eval on a <code>Suspend</code>. This is easy to achieve by putting the evaluation code in the eval method of the <code>Suspend</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public static class Suspend&lt;T&gt; extends TailCall&lt;T&gt; {
+
+  ...
+
+  @Override
+  public T eval() {
+    TailCall&lt;T&gt; tailRec = this;
+    while(tailRec.isSuspend()) {
+      tailRec = tailRec.resume();
+    }
+    return tailRec.eval();
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we may get the result of the recursive call in a much simpler and safer way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">add(3, 100000000).eval()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But this is not yet what we want. We want to get rid of this call to the <code>eval</code> method. This can be done with a helper method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import static com.fpinjava.excerpt.TailCall.ret;
+import static com.fpinjava.excerpt.TailCall.sus;
+
+. . .
+
+public static int add(int x, int y) {
+  return addRec(x, y).eval();
+}
+
+private static TailCall&lt;Integer&gt; addRec(int x, int y) {
+  return y == 0
+      ? ret(x)
+      : sus(() -&gt; addRec(x + 1, y - 1));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can call the <code>add</code> method exactly as the original one. Note that we have made our recursive API easier to use by providing static factory methods to instantiate <code>Return</code> and <code>Suspend</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public static &lt;T&gt; Return&lt;T&gt; ret(T t) {
+  return new Return&lt;&gt;(t);
+}
+
+public static &lt;T&gt; Suspend&lt;T&gt; sus(Supplier&lt;TailCall&lt;T&gt;&gt; s) {
+  return new Suspend&lt;&gt;(s);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Listing 3 shows the complete <code>TailCall</code> class. We have added a private no arg constructor in order to prevent extension by other classes.</p>
+</div>
+<div class="listingblock">
+<div class="title">Listing 3 The complete <code>TailCall</code> class</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.fpinjava.excerpt;
+
+import java.util.function.Supplier;
+
+public abstract class TailCall&lt;T&gt; {
+
+  public abstract TailCall&lt;T&gt; resume();
+
+  public abstract T eval();
+
+  public abstract boolean isSuspend();
+
+  private TailCall() {}
+
+  public static class Return&lt;T&gt; extends TailCall&lt;T&gt; {
+
+    private final T t;
+
+    private Return(T t) {
+      this.t = t;
+    }
+
+    @Override
+    public T eval() {
+      return t;
+    }
+
+    @Override
+    public boolean isSuspend() {
+      return false;
+    }
+
+    @Override
+    public TailCall&lt;T&gt; resume() {
+      throw new IllegalStateException("Return has no resume");
+    }
+  }
+
+public static class Suspend&lt;T&gt; extends TailCall&lt;T&gt; {
+
+  private final Supplier&lt;TailCall&lt;T&gt;&gt; resume;
+
+  private Suspend(Supplier&lt;TailCall&lt;T&gt;&gt; resume) {
+    this.resume = resume;
+  }
+
+  @Override
+  public T eval() {
+    TailCall&lt;T&gt; tailRec = this;
+    while(tailRec.isSuspend()) {
+      tailRec = tailRec.resume();
+    }
+    return tailRec.eval();
+  }
+
+    @Override
+    public boolean isSuspend() {
+      return true;
+    }
+
+    @Override
+    public TailCall&lt;T&gt; resume() {
+      return resume.get();
+    }
+  }
+
+  public static &lt;T&gt; Return&lt;T&gt; ret(T t) {
+    return new Return&lt;&gt;(t);
+  }
+
+  public static &lt;T&gt; Suspend&lt;T&gt; sus(Supplier&lt;TailCall&lt;T&gt;&gt; s) {
+    return new Suspend&lt;&gt;(s);
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that you have a stack-safe tail recursive method, can you do the same thing with a function? In my book, <a href="https://manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, I talk about how to do that.</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+  
+  <section class="post-comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'fpinjava'; // required: replace example with your forum shortname
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </section>
+  
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2016. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//pysaumont.github.io/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+
+</body>
+</html>
