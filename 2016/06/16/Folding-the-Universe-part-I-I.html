@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is a series of articles complementing my book, Functional Programming in Java. Previous articles in this series may be found here: Folding the Universe, part I In the the previous article in this series, I showed how to write..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/06/16/Folding-the-Universe-part-I-I.html" />
     <meta property="article:published_time" content="2016-06-15T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-06-11T18:44:15.164Z" />
+    <meta property="article:modified_time" content="2016-06-11T18:59:50.743Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part II" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part II",
     "url": "https://pysaumont.github.io/2016/06/16/Folding-the-Universe-part-I-I.html",
     "datePublished": "2016-06-15T22:00:00.000Z",
-    "dateModified": "2016-06-11T18:44:15.164Z",
+    "dateModified": "2016-06-11T18:59:50.743Z",
     "description": "This is a series of articles complementing my book, Functional Programming in Java. Previous articles in this series may be found here: Folding the Universe, part I In the the previous article in this series, I showed how to write..."
 }
     </script>
@@ -161,12 +161,12 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html">Folding the Universe, part I</a></p>
+<p><a href="http://www.fpinjava.com/2014/12/03/Folding-the-Universe-part-I.html">Folding the Universe, part I</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>In the the previous article in this series, I showed how to write a functional Java program solving the Knapsack problem, which consists in packing a Knapsack of a given capacity with items from a collection, while maximizing the Knapsack value, given that each item has a weight and an individual value. Of course, we must not exceed the Knapsack capacity. This problem may be applied to dividing any quantity (the knapsack capacity) in parts (the items) while maximizing the value, which might, in some cases, mean minimizing the unused capacity (when the value of each item is proportional to its weight). There are indeed several variants of this problem, the most common two being packing with a single copy of each item and packing with as many copies as wanted of each item. An example of solving this problem in traditional imperative Java may be found here: <a href="https://rosettacode.org/wiki/Knapsack_problem/0-1#Java">Knapsack problem/0-1</a>. Please have a look at it before reading this article.</p>
+<p>In the the previous article in this series, I showed how to write a functional Java program solving the <em>Knapsack</em>  problem, which consists in packing a knapsack of a given capacity with items from a collection, while maximizing the knapsack value, given that each item has a weight and an individual value. Of course, we must not exceed the knapsack capacity. This problem may be applied to dividing any quantity (the knapsack capacity) in parts (the items) while maximizing the value, which might, in some cases, mean minimizing the unused capacity (when the value of each item is proportional to its weight). There are indeed several variants of this problem, the most common two being packing with a single copy of each item and packing with as many copies as wanted of each item. An example of solving this problem in traditional imperative Java may be found here: <a href="https://rosettacode.org/wiki/Knapsack_problem/0-1#Java">Knapsack problem/0-1</a>. Please have a look at it before reading this article.</p>
 </div>
 </div>
 </div>
@@ -174,7 +174,7 @@
 <h2 id="_the_challenge">The challenge</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As I said in the previous article, the challenge is to solve the problem while using no variables (only constants) and no control structures, but only using classes and methods, arithmetic operations and comparisons, and Java 8 <code>Function</code> and <code>BiFunction</code>. I showed a bi-recursive version in the previous article and explained why it was not really usable (at least for lists of items longer that thirty elements). Our new challenge is two write this same program without using recursion at all, except for the folds, which are abstracted in the list class that we have defined. If you haven&#8217;t read part I, please do so before reading this article. (<a href="https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html">Folding the Universe, part I</a>)</p>
+<p>As I said in the previous article, the challenge is to solve the problem while using no variables (only constants) and no control structures, but only using classes and methods, arithmetic operations and comparisons, and Java 8 <code>Function</code> and <code>BiFunction</code>. I showed a bi-recursive version in the previous article and explained why it was not really usable (at least for lists of items longer that thirty elements). Our new challenge is two write this same program without using recursion at all, except for the folds, which are abstracted in the <code>List</code> class that we have defined. If you haven&#8217;t read part I, please do so before reading this article. (<a href="http://www.fpinjava.com/">Folding the Universe, part I</a>)</p>
 </div>
 </div>
 </div>
@@ -182,12 +182,12 @@
 <h2 id="_how_to_avoid_recursion">How to avoid recursion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To avoid bi-recursion, we have to memorize the result of each step in order not not have to compute it again an again. It is obvious that when examining an item to see if we should put it in the knapsack, we must consider what we have already put in at previous steps. What we will do is:</p>
+<p>To avoid bi-recursion, we have to memorize the result of each step in order not not have to compute it again and again. It is obvious that when examining an item to see if we should put it in the knapsack, we must consider what we have already put in at previous steps. What we will do is:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>build a list of knapsack of capacity varying from 0 to the given capacity.</p>
+<p>build a list of knapsack of capacity varying from 1 to the given capacity, in reverse order.</p>
 </li>
 <li>
 <p>for each item in the list,</p>
@@ -211,7 +211,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>Note that if we add a knapsack to the list, we put it in front of the list. So, the knapsack with the maximum value will simply be the head of the list. This is why we select the knapsack of index (<code>item.weight - 1</code>). This corresponds to an index of <code>i - it.weight</code> if list where build the other way, where <code>i</code> would be the index of the knapsack we are in.</p>
+<p>Note that if we add a knapsack to the list, we put it in front of the list. So, the knapsack with the maximum value will simply be the head of the list. This is why we select the knapsack of index (<code>item.weight - 1</code>). This corresponds to an index of <code>i - it.weight</code> if the list was build the other way, where <code>i</code> would be the index of the knapsack we are in.</p>
 </div>
 <div class="paragraph">
 <p>Here is the corresponding code:</p>
@@ -237,10 +237,10 @@
 <p>(2) A list of integers is build by first creating a list of integers from the given capacity to 1. The <code>range</code> method must be added to the <code>List</code> class.</p>
 </div>
 <div class="paragraph">
-<p>(3) This list of integers is mapped to a list of knapsacks. While constructing this list (named <code>acc</code>, for <code>accumulator</code>, by convention), the previously created knapsacks are available.</p>
+<p>(3) This list of integers is mapped to a list of knapsacks. While constructing this list (named <code>acc</code>, for "accumulator", by convention), the previously created knapsacks are available.</p>
 </div>
 <div class="paragraph">
-<p>(4) We filter the items so that we won&#8217;t try to insert items with a weight higher that what the knapsack may contain.</p>
+<p>(4) We filter the items so that we won&#8217;t try to insert items with a weight higher than what the knapsack may contain.</p>
 </div>
 <div class="paragraph">
 <p>(5) We look for a previously created knapsack of index <code>item.weight - 1</code>. The <code>List.at(n)</code> method has to be created and it will return optional data, which mean a list of zero (not found) or one (found) knapsack. If this knapsack is found, the item is added to it, which is done by mapping the function <code>k &#8594; k.add(item)</code> to the singleton knapsack list.</p>
@@ -249,13 +249,13 @@
 <p>(6) From the resulting list, we select the knapsack with the maximum value.</p>
 </div>
 <div class="paragraph">
-<p>(7) The resulting value is added to the (head of) accumulator. This concludes the function used for folding the list of integers, in &lt;3&gt;.</p>
+<p>(7) The resulting value is added to the (head of) accumulator. This concludes the function used for folding the list of integers, in (3).</p>
 </div>
 <div class="paragraph">
 <p>(8) Once the list of integers is folded to a list of knapsacks, we just have to select the maximum value, which is automatically the head of the list. As the head method returns a singleton list, we use a "getOrElse" technique to select either the value if it is present, or a default value if not.</p>
 </div>
 <div class="paragraph">
-<p>The technique used here is very well none in Functional Programming and is called memoization. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the <code>acc</code> parameter).</p>
+<p>The technique used here is very well none in functional programming and is called memoization. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the <code>acc</code> parameter).</p>
 </div>
 </div>
 </div>
@@ -263,7 +263,7 @@
 <h2 id="_implementing_the_missing_methods">Implementing the missing methods</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this example, we have used two new methods that are missing in the list class. The <code>range</code> method is a convenience method allowing creating a list of integers from <code>start</code> (included) to <code>end</code> (excluded) if <code>start</code> is lower than <code>end</code>. Otherwise, the list is constructed in reverse order. The fact that <code>start</code> is included and <code>end</code> is excluded for is purely conventional. Here is the corresponding implementation in the <code>List</code> class:</p>
+<p>In this example, we have used two new methods that are missing in the <code>List</code> class. The <code>range</code> method is a convenience method allowing creating a list of integers from <code>start</code> (included) to <code>end</code> (excluded) if <code>start</code> is lower than <code>end</code>. Otherwise, the list is constructed in reverse order. The fact that <code>start</code> is included and <code>end</code> is excluded is purely conventional. Here is the corresponding implementation in the <code>List</code> class:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -297,7 +297,7 @@ private static List&lt;Integer&gt; rangeDesc(List&lt;Integer&gt; acc, int start,
 </div>
 </div>
 <div class="paragraph">
-<p>This method is really not very efficient since it used the <code>head</code> method defined in the previous article. We will fix this in the next section.</p>
+<p>This method is even less efficient since it uses the <code>head</code> method defined in the previous article. We will fix this in the next section.</p>
 </div>
 </div>
 </div>
@@ -305,7 +305,7 @@ private static List&lt;Integer&gt; rangeDesc(List&lt;Integer&gt; acc, int start,
 <h2 id="_solving_the_real_problem">Solving the real problem</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Beside efficiency, we have a more important problem: our program does not solve our real problem, because it allows using several time the same item. It was done this way for simplification. Now, we can fix this easily:</p>
+<p>Beside efficiency, we have a more important problem: our program does not solve our real problem, because it allows using several times the same item. It was done this way for simplification. Now, we can fix this easily:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -321,13 +321,8 @@ private static List&lt;Integer&gt; rangeDesc(List&lt;Integer&gt; acc, int start,
 }</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>We put the element in the knapsack only if it has not yet been used, which simply means that the knapsack does not already contains it.</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>(1) We put the element in the knapsack only if it has not yet been used, which simply means that the knapsack does not already contains it.</p>
 </div>
 <div class="paragraph">
 <p>To make this possible, we must add the <code>contains</code> method to the <code>Knapsack</code> class:</p>
@@ -382,6 +377,12 @@ private static List&lt;Integer&gt; rangeDesc(List&lt;Integer&gt; acc, int start,
   ...</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>(1) A random UUID is generated,</p>
+</div>
+<div class="paragraph">
+<p>(2) and it is used to test equality.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -394,7 +395,7 @@ private static List&lt;Integer&gt; rangeDesc(List&lt;Integer&gt; acc, int start,
 <p>In the previous article, we saw that it was perfectly possible to use a list to represent optional data. Absence of data is represented by an empty list, and data is represented by a singleton list. The main problem is that there was no mean to differentiate a normal list from a singleton list. The good thing is that it is very easy to compose both.</p>
 </div>
 <div class="paragraph">
-<p>Another possibility is to use a special class to represent singleton lists. We might call this class <code>Option</code>. It will be identical to the <code>List</code> class, with two main exceptions: there is no <code>cons</code> method (since we can&#8217;t add elements) and the folding methods generally do not take a function argument (although it could) and will simply return either the included value, if it is present, or the "zero" value if not. Of course, the zero value will have a more explicit name such as <code>default</code>, but this (like names in general) is irrelevant. Here is a minimal <code>Option</code> class:</p>
+<p>Another possibility is to use a special class to represent singleton lists. We might call this class <code>Option</code>. It will be identical to the <code>List</code> class, with two main exceptions: there is no <code>cons</code> method (since we can&#8217;t add elements) and the folding methods generally do not take a function argument. It could however take one, but it would in most use cases be the identity function, which is why it is most often implemented without this function argument. This method will then simply return either the included value, if it is present, or the "zero" value if not. Of course, the "zero" value will have a more explicit name such as <code>default</code>, but this (like names in general) is irrelevant. Here is a minimal <code>Option</code> class:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -468,7 +469,7 @@ private static List&lt;Integer&gt; rangeDesc(List&lt;Integer&gt; acc, int start,
 <h2 id="_what_option_changes_to_our_example">What Option changes to our example</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Using <code>Option</code> to represent optional data instead of a list brings some benefits in the sense that a program is often easier to read if we can easily distinguish between true lists (which can containing any number of elements) and singleton lists representing optional data (which can only contain zero or one element). By the way, the difference is not always visible since type may sometimes be inferred, such as when chaining methods. Here is our <code>pack</code> method using <code>Option</code> instead of <code>List</code> for optional data:</p>
+<p>Using <code>Option</code> to represent optional data instead of a list brings some benefits in the sense that a program is often easier to read if we can easily distinguish between true lists (which can contain any number of elements) and singleton lists representing optional data (which can only contain zero or one element). By the way, the difference is not always visible since type may sometimes be inferred, such as when chaining methods. Here is our <code>pack</code> method using <code>Option</code> instead of <code>List</code> for optional data:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -485,28 +486,20 @@ private static List&lt;Integer&gt; rangeDesc(List&lt;Integer&gt; acc, int start,
 }</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The flatMap method can&#8217;t be used, since it produces a <code>List</code> Here, we produce an <code>Option</code>, but this would not be visible if we had kept the name <code>flatMap</code> for the method. We will of course have to define the <code>Option.sequence</code> method.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The <code>map</code> method is called on an <code>Option</code>, but it is difficult to see by looking at the code!</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Getting the value (if present) or a default value (if not) is done through the <code>getOrElse</code> method. We changed the name to follow current usage although is is implemented through a fold!</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>We can simplify getting the value or default value from the resulting <code>Option</code>.</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>(1) The flatMap method can&#8217;t be used, since it produces a <code>List</code> Here, we produce an <code>Option</code>, but this would not be visible if we had kept the name <code>flatMap</code> for the method. We will of course have to define the <code>Option.sequence</code> method.</p>
 </div>
 <div class="paragraph">
-<p>The <code>map</code> and <code>getOrElse</code> method can be seen in the previous listing of the <code>Option</code> class. You can see that <code>Option</code> is really a <code>List</code>. The problem happen when a list is mapped with a function returning an <code>Option</code>. When we were using a list for optional data, the function was returning a <code>List</code>, so we ended with a <code>List&lt;List&lt;A&gt;&gt;</code>. Getting a <code>List&lt;A&gt;</code> instead was just a matter of using <code>flatMap</code> instead of <code>Map</code>. With <code>Option</code>, we end with a List&lt;Option&lt;A&gt;. So we have to create a method for this. We will put it in the <code>List</code> class. By convention, this method is called <code>sequence</code>. In order to better mimic the <code>List.flatMap</code> method, we will also add a convenience <code>sequence</code> method taking a function returning an <code>Option</code> as its argument:</p>
+<p>(2) The <code>map</code> method is called on an <code>Option</code>, but it is difficult to see by looking at the code!</p>
+</div>
+<div class="paragraph">
+<p>(3) Getting the value (if present) or a default value (if not) is done through the <code>getOrElse</code> method. We changed the name to follow current usage although it is implemented through a fold!</p>
+</div>
+<div class="paragraph">
+<p>(4) We can simplify getting the value or default value from the resulting <code>Option</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>map</code> and <code>getOrElse</code> method can be seen in the previous listing of the <code>Option</code> class. You can see that <code>Option</code> is really a <code>List</code>. The problem happens when a list is mapped with a function returning an <code>Option</code>. When we were using a list for optional data, the function was returning a <code>List</code>, so we ended with a <code>List&lt;List&lt;A&gt;&gt;</code>. Getting a <code>List&lt;A&gt;</code> instead was just a matter of using <code>flatMap</code> instead of <code>Map</code>. With <code>Option</code>, we end with a <code>List&lt;Option&lt;A&gt;</code>. So we have to create a method for this. We will put it in the <code>List</code> class. By convention, this method is called <code>sequence</code>. In order to better mimic the <code>List.flatMap</code> method, we will also add a convenience <code>sequence</code> method taking a function returning an <code>Option</code> as its argument:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -523,21 +516,14 @@ public static &lt;A, B, C&gt; Option&lt;C&gt; map2(Option&lt;A&gt; a, Option&lt;
 }</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>This method is a simple convenience allowing applying the function and calling <code>sequence</code> in a single operation that mimics the <code>List.flatMap</code> method.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The <code>sequence</code> method uses a <code>foldRight</code> (to preserve the list order) and a utility method <code>map2</code> transforming a <code>BiFunction&lt;A, B, C&gt;</code> into a <code>BiFunction&lt;Option&lt;A&gt;, Option&lt;B&gt;, Option&lt;C&gt;</code></td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>This is a very common idiom in functional programming. If you have trouble to understand it, you should insist until you succeed. It is not complicated. The first <code>flatMap</code> give access to the value contained in the first <code>Option</code> (<code>av</code>). The second nested <code>flatMap</code> does the same for the second <code>Option</code>, producing the value <code>bv</code>. We can apply the function to these two values, producing a <code>C</code>. As we want an <code>Option&lt;C&gt;</code>, we just wrap it into an <code>Option.Some</code>.</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>(1) This method is a simple convenience allowing applying the function and calling <code>sequence</code> in a single operation that mimics the <code>List.flatMap</code> method.</p>
+</div>
+<div class="paragraph">
+<p>(2) The <code>sequence</code> method uses a <code>foldRight</code> (to preserve the list order) and a utility method <code>map2</code> transforming a <code>BiFunction&lt;A, B, C&gt;</code> into a <code>BiFunction&lt;Option&lt;A&gt;, Option&lt;B&gt;, Option&lt;C&gt;&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>(3) This is a very common idiom in functional programming. If you have trouble to understand it, you should insist until you succeed. It is not complicated. The first <code>flatMap</code> give access to the value contained in the first <code>Option</code> (<code>av</code>). The second nested <code>flatMap</code> does the same for the second <code>Option</code>, producing the value <code>bv</code>. We can apply the function to these two values, producing a <code>C</code>. As we want an <code>Option&lt;C&gt;</code>, we just wrap it into an <code>Option.Some</code>.</p>
 </div>
 <div class="paragraph">
 <p>Note that the <code>map2</code> implementation is not optimal. We must take the value out of the first <code>Option</code>, thus using <code>flatMap</code>. But we are not forced to do the same with the second. An alternate (and far more common) solution is to <code>map</code> the second option with the function:</p>
