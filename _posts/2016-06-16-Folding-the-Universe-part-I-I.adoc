@@ -3,13 +3,13 @@
 
 This is a series of articles complementing my book, https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java]. Previous articles in this series may be found here:
 
-- http://www.fpinjava.com/2014/12/03/Folding-the-Universe-part-I.html[Folding the Universe, part I]
+- https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html[Folding the Universe, part I]
 
 In the the previous article in this series, I showed how to write a functional Java program solving the Knapsack problem, which consists in packing a Knapsack of a given capacity with items from a collection, while maximizing the Knapsack value, given that each item has a weight and an individual value. Of course, we must not exceed the Knapsack capacity. This problem may be applied to dividing any quantity (the knapsack capacity) in parts (the items) while maximizing the value, which might, in some cases, mean minimizing the unused capacity (when the value of each item is proportional to its weight). There are indeed several variants of this problem, the most common two being packing with a single copy of each item and packing with as many copies as wanted of each item. An example of solving this problem in traditional imperative Java may be found here: https://rosettacode.org/wiki/Knapsack_problem/0-1#Java[Knapsack problem/0-1]. Please have a look at it before reading this article.
 
 == The challenge
 
-As I said in the previous article, the challenge is to solve the problem while using no variables (only constants) and no control structures, but only using classes and methods, arithmetic operations and comparisons, and Java 8 `Function` and `BiFunction`. I showed a bi-recursive version in the previous article and explained why it was not really usable (at least for lists of items longer that thirty elements). Our new challenge is two write this same program without using recursion at all, except for the folds, which are abstracted in the list class that we have defined. If you haven't read part I, please do so before reading this article. (http://www.fpinjava.com/[Folding the Universe, part I])
+As I said in the previous article, the challenge is to solve the problem while using no variables (only constants) and no control structures, but only using classes and methods, arithmetic operations and comparisons, and Java 8 `Function` and `BiFunction`. I showed a bi-recursive version in the previous article and explained why it was not really usable (at least for lists of items longer that thirty elements). Our new challenge is two write this same program without using recursion at all, except for the folds, which are abstracted in the list class that we have defined. If you haven't read part I, please do so before reading this article. (https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html[Folding the Universe, part I])
 
 == How to avoid recursion
 
