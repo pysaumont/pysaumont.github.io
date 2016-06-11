@@ -1,4 +1,4 @@
 = Folding the Universe, part I
 :published_at: 2016-06-11
 
-Hello
+Folding the Universe is actually the title of a book by Peter Engel which is subtitled "Origami From Angelfish to Zen", suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is interesting since in functional programming, nearly every problem can be solve with folds.
