@@ -168,9 +168,9 @@ public class Item {
   ...
 ----
 
-<1> A random UUID is generated,
+// <1> A random UUID is generated,
 
-<2> And it is used to test equality.
+// <2> And it is used to test equality.
 
 == Representing the absence of data
 
