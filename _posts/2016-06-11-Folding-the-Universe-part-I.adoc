@@ -1,7 +1,7 @@
 = Folding the Universe, part I
 :published_at: 2016-06-11
 
-Folding the Universe is actually the title of a book by Peter Engel which is subtitled "Origami From Angelfish to Zen", suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is interesting since in functional programming, nearly every problem can be solve with folds.
+Folding the Universe is actually the title of a book by Peter Engel which is subtitled "Origami From Angelfish to Zen", suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is interesting since, in functional programming, nearly every problem can be solve with folds.
 
 Computer programming is primarily about abstraction. Instead of doing the same basic tasks again an again, we once write programs to performs these tasks, and we can then build larger programs by composing these basic tasks. Probably one difference between functional and imperative programmers is the way they handle task abstractions. Most often, imperative programmers start thinking about abstracting subtasks when they realize that they are repeatedly writing the same code. But the depth of abstraction is often kept quite minimal. The main reason is that higher level abstractions are generally provided by the language. Arithmetic operations on integers, for example, is provided by nearly all programming languages, so there is no need to write specific code to abstract them (although it is possible, and and an interesting challenge!).
 
