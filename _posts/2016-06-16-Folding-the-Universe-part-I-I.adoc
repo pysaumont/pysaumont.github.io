@@ -1,4 +1,5 @@
 = Folding the Universe, part II
+:published_at: 2016-06-16
 
 This is a series of articles complementing my book, https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java]. Previous articles in this series may be found here:
 
