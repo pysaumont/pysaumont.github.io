@@ -44,21 +44,22 @@ public static Knapsack pack(List<Item> items, int capacity) {
   return result.head().foldRight(zero, (a, b) -> a); // <8>
 }
 ----
-<1> A "zero" knapsack is created with the given capacity. This is just a convenience to avoid calling the `Knapsack.empty()` method several times.
 
-<2> A list of integers is build by first creating a list of integers from the given capacity to 1. The `range` method must be added to the `List` class.
+(1) A "zero" knapsack is created with the given capacity. This is just a convenience to avoid calling the `Knapsack.empty()` method several times.
 
-<3> This list of integers is mapped to a list of knapsacks. While constructing this list (named `acc`, for `accumulator`, by convention), the previously created knapsacks are available.
+(2) A list of integers is build by first creating a list of integers from the given capacity to 1. The `range` method must be added to the `List` class.
 
-<4> We filter the items so that we won't try to insert items with a weight higher that what the knapsack may contain.
+(3) This list of integers is mapped to a list of knapsacks. While constructing this list (named `acc`, for `accumulator`, by convention), the previously created knapsacks are available.
 
-<5> We look for a previously created knapsack of index `item.weight - 1`. The `List.at(n)` method has to be created and it will return optional data, which mean a list of zero (not found) or one (found) knapsack. If this knapsack is found, the item is added to it, which is done by mapping the function `k -> k.add(item)` to the singleton knapsack list.
+(4) We filter the items so that we won't try to insert items with a weight higher that what the knapsack may contain.
 
-<6> From the resulting list, we select the knapsack with the maximum value.
+(5) We look for a previously created knapsack of index `item.weight - 1`. The `List.at(n)` method has to be created and it will return optional data, which mean a list of zero (not found) or one (found) knapsack. If this knapsack is found, the item is added to it, which is done by mapping the function `k -> k.add(item)` to the singleton knapsack list.
 
-<7> The resulting value is added to the (head of) accumulator. This concludes the function used for folding the list of integers, in <3>.
+(6) From the resulting list, we select the knapsack with the maximum value.
 
-<8> Once the list of integers is folded to a list of knapsacks, we just have to select the maximum value, which is automatically the head of the list. As the head method returns a singleton list, we use a "getOrElse" technique to select either the value if it is present, or a default value if not.
+(7) The resulting value is added to the (head of) accumulator. This concludes the function used for folding the list of integers, in <3>.
+
+(8) Once the list of integers is folded to a list of knapsacks, we just have to select the maximum value, which is automatically the head of the list. As the head method returns a singleton list, we use a "getOrElse" technique to select either the value if it is present, or a default value if not.
 
 The technique used here is very well none in Functional Programming and is called memoization. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the `acc` parameter).
 
