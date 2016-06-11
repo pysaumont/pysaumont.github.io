@@ -35,7 +35,7 @@
     <meta property="og:description" content="Folding the Universe is actually the title of a book by Peter Engel which is subtitled &quot;Origami From Angelfish to Zen&quot;, suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html" />
     <meta property="article:published_time" content="2016-06-10T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-06-11T06:49:24.291Z" />
+    <meta property="article:modified_time" content="2016-06-11T07:35:12.493Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part I" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part I",
     "url": "https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html",
     "datePublished": "2016-06-10T22:00:00.000Z",
-    "dateModified": "2016-06-11T06:49:24.291Z",
+    "dateModified": "2016-06-11T07:35:12.493Z",
     "description": "Folding the Universe is actually the title of a book by Peter Engel which is subtitled &quot;Origami From Angelfish to Zen&quot;, suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is..."
 }
     </script>
@@ -159,7 +159,7 @@
 <p>Folding the Universe is actually the title of a book by Peter Engel which is subtitled "Origami From Angelfish to Zen", suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is interesting since, in functional programming, nearly every problem can be solve with folds.</p>
 </div>
 <div class="paragraph">
-<p>Computer programming is primarily about abstraction. Instead of doing the same basic tasks again an again, we once write programs to performs these tasks, and we can then build larger programs by composing these basic tasks. Probably one difference between functional and imperative programmers is the way they handle task abstractions. Most often, imperative programmers start thinking about abstracting subtasks when they realize that they are repeatedly writing the same code. But the depth of abstraction is often kept quite minimal. The main reason is that higher level abstractions are generally provided by the language. Arithmetic operations on integers, for example, is provided by nearly all programming languages, so there is no need to write specific code to abstract them (although it is possible, and and an interesting challenge!).</p>
+<p>Computer programming is primarily about abstraction. Instead of doing the same basic tasks again and again, we once write programs to performs these tasks, and we can then build larger programs by composing these basic tasks. Probably one difference between functional and imperative programmers is the way they handle task abstractions. Most often, imperative programmers start thinking about abstracting subtasks when they realize that they are repeatedly writing the same code. But the depth of abstraction is often kept quite minimal. The main reason is that higher level abstractions are generally provided by the language. Arithmetic operations on integers, for example, is provided by nearly all programming languages, so there is no need to write specific code to abstract them (although it is possible, and an interesting challenge!).</p>
 </div>
 <div class="paragraph">
 <p>Loops are another kind of abstraction that is provided by many languages. Most imperative programmers would not believe that there exist programming languages without loops. Is it possible to program without loops? Of course, it is. It is even possible to program with absolutely no control structures.</p>
@@ -168,10 +168,13 @@
 <p>Maybe you think that it is possible in some very specific languages specially designed for this. Nothing could be more wrong. Take Java, for example. It is perfectly possible to write any program without ever using a for loop, a while loop, a switch case selector, or event an if..else construct. You don&#8217;t believe it? Read on.</p>
 </div>
 <div class="paragraph">
-<p>Not only you can write java program without any control structure, but you can also completely avoid variables. Is this useful? Well, avoiding variables is indeed very useful to write safer concurrent programs since it frees us from all concurrency problems, such as deadlock, livelocks, stale data, races, corruption and more. Avoiding control structures also brings many advantages, but it is more difficult to make it evident. Evidence comes with usage. But in all cases, it is a very rewarding challenge. So why not give it a try?</p>
+<p>Not only can you write java programs without any control structure, but you can also completely avoid variables. Is this useful? Well, avoiding variables is indeed very useful to write safer concurrent programs since it frees us from all concurrency problems, such as deadlock, livelocks, stale data, races, corruption and more. But it is also safer for non concurrent programs since you can confidently reuse data knowing that it will not have been altered.</p>
 </div>
 <div class="paragraph">
-<p>If you are the kind of programmer who think in terms of best practices, design patterns, productivity through the use of multiple libraries, or if you have ever thought that "this is not the way Java (or anything else) has been intended to be used", or if you think that we should never try to reinvent the wheel, you should probably not continue reading. (By the way, if the wheel had not been reinvented many times, it would still be circular and spinning around its center, so there would be no cars, no trains, nor anything else using modern wheels, but this is another story.</p>
+<p>Avoiding control structures also brings many advantages, but it is more difficult to make it evident. Evidence comes with usage. But in all cases, it is a very rewarding challenge. So why not give it a try?</p>
+</div>
+<div class="paragraph">
+<p>Warning: If you are the kind of programmer who think in terms of best practices, design patterns, productivity through the use of multiple libraries, or if you have ever thought that "this is not the way Java (or anything else) has been intended to be used", or if you think that we should never try to reinvent the wheel, you should probably not continue reading. (By the way, if the wheel had not been reinvented many times, it would still be circular and spinning around its center, so there would be no cars, no trains, nor anything else using modern wheels, but this is another story.)</p>
 </div>
 </div>
 </div>
@@ -179,10 +182,10 @@
 <h2 id="_the_challenge">The challenge</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The challenge is to solve a well known computer problem while using no variables (only constants) and no control structures. We can create classes and methods, we can use the arithmetic operations and comparisons (we could do without, but we would have to design a whole number system with operators, based on folds, which is perfectly feasible, but a bit cumbersome. We will use Java 8 <code>Function</code> and <code>BiFunction</code>, because creating ours would be a waste of time (but minimal, since this would need only three lines of code each).</p>
+<p>The challenge is to solve a well known computer problem while using no variables (only constants) and no control structures. We can create classes and methods, we can use the arithmetic operations and comparisons. We could do without, but we would have to design a whole number system with operators, based on folds, which is perfectly feasible, but a bit cumbersome. We will use Java 8 <code>Function</code> and <code>BiFunction</code>, because creating ours would be a waste of time (but minimal, since this would need only three lines of code each).</p>
 </div>
 <div class="paragraph">
-<p>The problem to solve is known as the Knapsack problem. Basically, it consist in packing a knapsack with items in the best possible manner. The knapsack has a maximum capacity, and each item has a name, a weight and a value. The goal is to pack the maximum value in the knapsack without exceeding its capacity. If you want to get an idea of how to solve this in a traditional imperative manner in Java, you can look at this example: <a href="https://rosettacode.org/wiki/Knapsack_problem/0-1#Java">Knapsack problem/0-1</a>. I strongly encourage you to look at the example to have an idea of how this problem may be solved in imperative style in just 300 lines of code.</p>
+<p>The problem to solve is known as the <em>Knapsack problem</em>. Basically, it consists in packing a knapsack with items in the best possible manner. The knapsack has a maximum capacity, and each item has a name, a weight and a value. The goal is to pack the maximum value in the knapsack without exceeding its capacity. If you want to get an idea of how to solve this in a traditional imperative manner in Java, you can look at this example: <a href="https://rosettacode.org/wiki/Knapsack_problem/0-1#Java">Knapsack problem/0-1</a>. I strongly encourage you to look at the example to have an idea of how this problem may be solved in imperative style in just 300 lines of (non reusable) code.</p>
 </div>
 </div>
 </div>
@@ -190,7 +193,7 @@
 <h2 id="_how_to_handle_the_problem">How to handle the problem</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>First, we will define the business objects. Although being functional, our program will still be object oriented. The first thing we will need is a class to represent items. It will be a very basic class:</p>
+<p>First, we will define the business objects. The first thing we will need is a class to represent items. It will be a very basic class:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -199,7 +202,7 @@
   public final int weight;
   public final double value;
 
-  private Item(String name, int weight, double value) {
+  public Item(String name, int weight, double value) {
     this.name = name;
     this.weight = weight;
     this.value = value;
@@ -208,15 +211,11 @@
   public String toString() {
     return String.format("item(%s, %s, %s)", name, weight, value);
   }
-
-  public static Item item(String name, int weight, double value) {
-    return new Item(name, weight, value);
-  }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you don&#8217;t like public fields, feel free to make them private an write the corresponding getters. It is absolutely useless, however, just making the code longer. Note that the factory method is for convenience. It generally allows putting validation code, which we do not have here. The <code>toString</code> method is also for convenience, in order to print the result. In fact, there is absolutely no logic here.</p>
+<p>If you don&#8217;t like public fields, feel free to make them private and write the corresponding getters. It is absolutely useless, however, just making the code longer. The <code>toString</code> method is for convenience, in order to print the result. In fact, there is absolutely no logic in this class.</p>
 </div>
 <div class="paragraph">
 <p>Then, we need a class to represent the knapsack:</p>
@@ -276,10 +275,10 @@
 <p>The constructor is private, and we have only one factory method called <code>empty</code> that creates an empty knapsack. Adding an item to the knapsack is done through the <code>add</code> method, which does not mutate anything but creates and returns a new <code>Knapsack</code> with the updated value. You might argue that the <code>List&lt;Item&gt;</code> is mutated, but it is not, because it is not a Java <code>List</code>. More on this later.</p>
 </div>
 <div class="paragraph">
-<p>There are three utility methods: <code>canAccept(Item)</code> allows knowing if the knapsack has enough available capacity to receive a given item. The <code>maxValue</code> method compares two <code>Knapsack</code> instances and returns the one with the greatest value. The <code>toString</code> method, of course, returns a readable representation of the knapsack. All these methods are for convenience and could be avoided.</p>
+<p>There are three utility methods: <code>canAccept(Item)</code> allows knowing if the knapsack has enough available capacity to receive a given item. The <code>maxValue</code> method compares two <code>Knapsack</code> instances and returns the one with the greatest value. The <code>toString</code> method, of course, returns a readable representation of the knapsack.</p>
 </div>
 <div class="paragraph">
-<p>The interesting part is the <code>pack</code> method, which takes a list of items and a <code>Knapsack</code> and returns the <code>Knapsack</code> (in fact a new one) with as much value as possible packed in it. Plus, there is a convenience <code>pack</code> method taking a list of items and a capacity.</p>
+<p>The interesting part is the <code>pack</code> method, which takes a list of items and a <code>Knapsack</code> and returns the <code>Knapsack</code> (in fact a new one) with as much value as possible packed into it. Plus, there is a convenience <code>pack</code> method taking a list of items and a capacity.</p>
 </div>
 <div class="paragraph">
 <p>Before looking at the core of the problem (the <code>pack</code> method), lets see how this program will be used:</p>
@@ -291,28 +290,28 @@
     int capacity = 400;
 
     final List&lt;Item&gt; items = List.&lt;Item&gt;list()
-        .cons(Item.item("map", 9, 150.0))
-        .cons(Item.item("compass", 13, 35.0))
-        .cons(Item.item("water", 153, 200.0))
-        .cons(Item.item("sandwich", 50, 160.0))
-        .cons(Item.item("glucose", 15, 60.0))
-        .cons(Item.item("tin", 68, 45.0))
-        .cons(Item.item("banana", 27, 60.0))
-        .cons(Item.item("apple", 39, 40.0))
-        .cons(Item.item("cheese", 23, 30.0))
-        .cons(Item.item("beer", 52, 10.0))
-        .cons(Item.item("cream", 11, 70.0))
-        .cons(Item.item("camera", 32, 30.0))
-        .cons(Item.item("tshirt", 24, 15.0))
-        .cons(Item.item("trousers", 48, 10.0))
-        .cons(Item.item("umbrella", 73, 40.0))
-        .cons(Item.item("trousers", 42, 70.0))
-        .cons(Item.item("overclothes", 43, 75.0))
-        .cons(Item.item("notecase", 22, 80.0))
-        .cons(Item.item("sunglasses", 7, 20.0))
-        .cons(Item.item("towel", 18, 12.0))
-        .cons(Item.item("socks", 4, 50.0))
-        .cons(Item.item("book", 30, 10.0));
+        .cons(new Item("map", 9, 150.0))
+        .cons(new Item("compass", 13, 35.0))
+        .cons(new Item("water", 153, 200.0))
+        .cons(new Item("sandwich", 50, 160.0))
+        .cons(new Item("glucose", 15, 60.0))
+        .cons(new Item("tin", 68, 45.0))
+        .cons(new Item("banana", 27, 60.0))
+        .cons(new Item("apple", 39, 40.0))
+        .cons(new Item("cheese", 23, 30.0))
+        .cons(new Item("beer", 52, 10.0))
+        .cons(new Item("cream", 11, 70.0))
+        .cons(new Item("camera", 32, 30.0))
+        .cons(new Item("tshirt", 24, 15.0))
+        .cons(new Item("trousers", 48, 10.0))
+        .cons(new Item("umbrella", 73, 40.0))
+        .cons(new Item("trousers", 42, 70.0))
+        .cons(new Item("overclothes", 43, 75.0))
+        .cons(new Item("notecase", 22, 80.0))
+        .cons(new Item("sunglasses", 7, 20.0))
+        .cons(new Item("towel", 18, 12.0))
+        .cons(new Item("socks", 4, 50.0))
+        .cons(new Item("book", 30, 10.0));
 
     System.out.println(Knapsack.pack(items, capacity));
   }
@@ -320,7 +319,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>As you can see, it is very simple, although the way the list is constructed may look a bit weird. As said earlier, this is not a Java <code>List</code>, but a functional singly linked list. It is represented by an abstract <code>List</code> class and two internal subclasses, <code>Nil</code> and <code>Cons</code> representing the empty and non empty list. A <code>Nil</code> has no property, while a <code>Cons</code> has a <code>head</code>, which is the first element in the list, and a <code>tail</code> which is the rest of the list:</p>
+<p>As you can see, it is very simple, although the way the list is constructed may look a bit weird. As said earlier, this is not a Java <code>List</code>, but a functional singly linked list. It is represented by an abstract <code>List</code> class and two internal subclasses, <code>Nil</code> and <code>Cons</code> representing the empty and non empty lists. A <code>Nil</code> has no property, while a <code>Cons</code> has a <code>head</code>, which is the first element in the list, and a <code>tail</code> which is the rest of the list:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -364,12 +363,12 @@
 <h2 id="_folding">Folding</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Now you can see how the list of items is constructed. However, you may wonder how we could ever use this list, since there is no mean to access its elements. In fact, we only need one operation: folding the list. Any processing you can imagine on a list may be done with a fold. Folding consists in taking a value of the intended result type (generally different from the elements type) and combining it with the first element, then combining the result with the second element and so on until all elements have been processed.</p>
+<p>Now you can see how the list of items is constructed. However, you may wonder how we could ever use this list, since there is no mean to access its elements. In fact, we only need one operation: folding the list. Any processing you can imagine on a list may be done with a fold. Folding consists in taking a value of the intended result type (generally different from the elements type) and combining it with an element, then combining the result with the next element and so on until all elements have been processed.</p>
 </div>
 <div class="sect2">
 <h3 id="_folding_right_or_left">Folding right or left</h3>
 <div class="paragraph">
-<p>We can fold a list starting from the left (the head of the list) or for the right (the last element of the list). To fold from the left, we need a left associative operation. To fold from the right, we need&#8230;&#8203; well, you guess.</p>
+<p>We can fold a list starting from the left (the head of the list) or for the right (the last element of the list). To fold from the left, we use a left associative operation. To fold from the right, we need&#8230;&#8203; well, you guess.</p>
 </div>
 <div class="paragraph">
 <p>Here is how we can write a <code>foldRight</code> method. First the signature in the abstract parent <code>List</code> class:</p>
@@ -380,7 +379,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>z</code> parameter is the starting result. It is called <code>z</code> by convention, meaning "zero", which would be the starting result for the sum of a list of integers.</p>
+<p>The <code>z</code> parameter is the starting result. It is called <code>z</code> by convention, meaning "zero", by analogy with the starting result for the sum of a list of integers.</p>
 </div>
 <div class="paragraph">
 <p>The operation used for the fold is represented by a <code>BiFunction</code>, taking an <code>A</code> (element of the list) and a <code>B</code> the current result) and returning a <code>B</code> (the next current result). In the <code>Nil</code> class, the implementation simply return <code>z</code>, since there is no element to which to apply the function:</p>
@@ -403,7 +402,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>Note that this implementation is recursive, and recursion happens on the stack, so it will blow the stack for lists of more than a few thousands elements. In my book <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, I show how to make recursion happen on the heap, but this would be a bit too long for this article.</p>
+<p>Note that this implementation is recursive, and recursion happens on the stack, so it will blow the stack for lists of more than a few thousands elements. In my book <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, I show how to make recursion happen on the heap, but this would be a bit too long for this article. Alternatively, you can have a look at this article: <a href="https://pysaumont.github.io/2014/12/03/Stack-safe-recursion-in-Java.html">Stack safe recursion in Java</a>.</p>
 </div>
 </div>
 </div>
@@ -412,7 +411,7 @@
 <h2 id="_folding_folding_folding">Folding, folding, folding&#8230;&#8203;</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>With this method, we can solve nearly all the problems we might have to solve. To understand how we can do this, it&#8217;s interesting to first show how we can make a copy of the list, although we will not need this:</p>
+<p>With this method, we can solve nearly all the problems we might have to solve. To understand how we can do this, it&#8217;s interesting to first show how we can make a copy of the list:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -425,7 +424,7 @@
 <p>We simply start with an empty list and add the elements to it, one after the other, starting from the right.</p>
 </div>
 <div class="paragraph">
-<p>For our specific problem, we will need a <code>map</code> method applying a function to all elements of the list. This exactly like a copy, excepted that we apply the function before inserting each element in the new list:</p>
+<p>For our specific Knapsack problem, we need a <code>map</code> method applying a function to all elements of the list. This exactly like a copy, excepted that we apply the function before adding each element to the new list:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -469,13 +468,13 @@ public List&lt;A&gt; concat(List&lt;A&gt; list) {
 </div>
 </div>
 <div class="paragraph">
-<p>Here, we ignore the elements, simply adding one to the result at each step. (Note that this is a very inefficient way to get the list of a list. Using memoization is much faster although it uses more memory.)</p>
+<p>Here, we ignore the elements, simply adding one to the result at each step. (Note that this is a very inefficient way to get the length of a list. Using memoization is much faster although it uses more memory.)</p>
 </div>
 <div class="paragraph">
 <p>Eventually, we will need to access the <code>head</code> and the <code>tail</code> of the list. But we can&#8217;t simply add methods for this, since we would not know what to return in the <code>Nil</code> class. For the tail, we could return an empty list, but what about the <code>head</code>?</p>
 </div>
 <div class="paragraph">
-<p>The solution is to return a <code>List&lt;A&gt;</code> for the head, which will either be an empty list, for a <code>Nil</code>, or a list containing a single element, in case of a <code>Cons</code>. Here is the implementation:</p>
+<p>A (temporary!) solution is to return a <code>List&lt;A&gt;</code> for the head, which will either be an empty list, for a <code>Nil</code>, or a list containing a single element, in case of a <code>Cons</code>. Here is the implementation:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -515,7 +514,7 @@ public List&lt;A&gt; concat(List&lt;A&gt; list) {
 <div class="ulist">
 <ul>
 <li>
-<p>look at the first element. If it does not fit in the knapsack, discard it.</p>
+<p>look at the first element. If it does not fit into the knapsack, discard it.</p>
 </li>
 <li>
 <p>if it fits, lets make two different computations:</p>
@@ -536,7 +535,7 @@ public List&lt;A&gt; concat(List&lt;A&gt; list) {
 </ul>
 </div>
 <div class="paragraph">
-<p>Could&#8217;it be simpler! Here is the corresponding implementation:</p>
+<p>Could&#8217;it be simpler? Here is the corresponding implementation:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -551,7 +550,7 @@ public List&lt;A&gt; concat(List&lt;A&gt; list) {
 <p>The only weird thing to remark is that our algorithm returns a list containing the resulting knapsack, so we extract it with <code>foldRight(knapsack, (a, b) &#8594; a)</code></p>
 </div>
 <div class="paragraph">
-<p>We&#8217;re done, and the core of our program has only three lines. (It could be written in only one line!) The <code>List</code> class is not at all specific to our program and will be used as part of our future functional library. The rest of the code (the <code>Item</code> class and the rest of the <code>Knapsack</code> class belong to the business model, and are only a description of our business data. Here is an example of what our program displays:</p>
+<p>We&#8217;re done, and the core of our program has only three lines. (It could be written in only one line!) The <code>List</code> class is not at all specific to our program and could be used as part of a future functional library. The rest of the code (the <code>Item</code> class and the rest of the <code>Knapsack</code> class) belongs to the business model, and is only a description of our business data. Here is an example of what our program displays:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -578,7 +577,7 @@ Items:
 <h2 id="_about_the_head_and_tail_methods">About the head and tail methods</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For these methods, we chose to return lists in order to be able to represent the absence of data. The main problem with this approach is that there is no mean to insure that some additional data will not be inserted by mistake in these lists. To avoid this, we generally use a different class, called <code>Option</code>, which is exactly like a <code>List</code> but where the <code>Nil</code> class is called <code>None</code> and the <code>Cons</code> class is called <code>Some</code> and has no tail. Other than this, it is exactly the same, excepted for the fold method which is called something else, like <code>getOrElse</code>. Beside this, it is sometimes difficult to distinguish between real lists (that can have several elements) and "option" lists (that can have at most one). This may make the program more difficult to read. On the other hand, it makes it much easier to compose the two cases. In a next article, I&#8217;ll show in detail what this means.</p>
+<p>For these methods, we chose to return lists in order to be able to represent the absence of data. The main problem with this approach is that there is no mean to insure that some additional data will not be inserted by mistake in these lists. To avoid this, we generally use a different class, called <code>Option</code>, which is exactly like a <code>List</code> but where the <code>Nil</code> class is called <code>None</code> and the <code>Cons</code> class is called <code>Some</code> and has no tail. Other than this, it is exactly the same, excepted for the <code>fold</code> method which is called something else, like <code>getOrElse</code> and don&#8217;t use a function. (Or uses the default "identity" function to be more accurate.) Beside this, it is sometimes difficult to distinguish between real lists (that can have several elements) and "option" lists (that can have at most one). This may make the program more difficult to read. On the other hand, it makes it much easier to compose the two cases, since they are represented by the same type. In a next article, I&#8217;ll show in detail what this means.</p>
 </div>
 </div>
 </div>
@@ -586,13 +585,13 @@ Items:
 <h2 id="_the_limitations_of_this_solution">The limitations of this solution</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>I have already indicated that since this program is recursive, and recursion in Java occurs on the stack, and since the stack has a very limited sized, this program will not work for much more than two or three thousands items. This may be out of concern, since a knapsack generally contain much less, but the problem is in fact much more general. It could be use to optimized the way to cut ropes or rods in pieces (while minimizing the loss), or to divide any quantity in the most efficient manner.</p>
+<p>I have already indicated that since this program is recursive, and recursion in Java occurs on the stack, and since the stack has a very limited sized, this program will not work for much more than two or three thousands items. This may be out of concern, since a knapsack generally contains much less, but the problem is in fact much more general. It could be use to optimized the way to cut ropes or rods in pieces (while minimizing the loss), or to divide any quantity in the most efficient manner.</p>
 </div>
 <div class="paragraph">
-<p>Recursion is sometimes called the <code>goto</code> of functional programming. This does not mean it should not be used, but that it should be abstracted. This is exactly what <code>foldRight</code> and <code>foldLeft</code> do. In other words, it is perfectly acceptable to use recursion inside the list class, although it probably should be used only once or twice. But using it in a business program in generally a bad practice. Moreover, in the real life, if we are using Java, we might want to optimize the fold for performance, using standard Java loops. In such case, it would be even more important to encapsulate these "dirty" parts in the <code>List</code> class. Or, as I already said, we can make recursion happen on the heap rather that on the stack. To learn how to do this, please refer to my book, <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, or to this article: <a href="http://www.fpinjava.com/2014/12/03/Stack-safe-recursion-in-Java.html">Stack safe recursion in Java</a>.</p>
+<p>Recursion is sometimes called the <code>goto</code> of functional programming. This does not mean it should not be used, but that it should be abstracted. This is exactly what <code>foldRight</code> does. In other words, it is perfectly acceptable to use recursion inside the list class, although it probably should be used only once or twice. But using it in a business program is generally a bad practice. Moreover, in the real life, if we are using Java, we might want to optimize the fold for performance, using standard Java loops. In such case, it would be even more important to encapsulate these "dirty" parts in the <code>List</code> class. Or, as I already said, we can make recursion happen on the heap rather that on the stack. To learn how to do this, please refer to my book, <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, or to this article: <a href="http://www.fpinjava.com/2014/12/03/Stack-safe-recursion-in-Java.html">Stack safe recursion in Java</a>.</p>
 </div>
 <div class="paragraph">
-<p>This said, there is a much radical limitation in our example. If you examine the <code>pack</code> method, you will see that it is bi-recursive, which means it calls itself twice. This means that for the first level, there will be two calls. each of these two calls will trigger two new calls, for a total of four. It is not difficult to see that this number of calls will grow exponentially. The consequence is that this program will not overflow the stack because it will never run longer enough for this. It will not work for more than around thirty items. To make this program really useful, we must find a way to write it with a single recursive call, or, better, not using recursion at all. This is what I will sho in a next article.</p>
+<p>This said, there is a much more radical limitation in this example. If you examine the <code>pack</code> method, you will see that it is bi-recursive, which means it calls itself twice. This means that for the first level, there will be two calls. Each of these two calls will trigger two new calls, for a total of four. It is not difficult to see that this number of calls will grow exponentially. The consequence is that this program will not overflow the stack because it will never run longer enough for this. It will not work for more than around thirty items. To make this program really useful, we must find a way to write it with a single recursive call, or, better, not using recursion at all (beside recursion in the <code>List</code> class). This is what I will show in a next article.</p>
 </div>
 </div>
 </div>
