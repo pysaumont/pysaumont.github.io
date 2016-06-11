@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is a series of articles complementing my book, Functional Programming in Java. Previous articles in this series may be found here: Folding the Universe, part I In the the previous article in this series, I showed how to write..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/06/16/Folding-the-Universe-part-I-I.html" />
     <meta property="article:published_time" content="2016-06-15T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-06-11T17:35:01.129Z" />
+    <meta property="article:modified_time" content="2016-06-11T18:34:48.326Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part II" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part II",
     "url": "https://pysaumont.github.io/2016/06/16/Folding-the-Universe-part-I-I.html",
     "datePublished": "2016-06-15T22:00:00.000Z",
-    "dateModified": "2016-06-11T17:35:01.129Z",
+    "dateModified": "2016-06-11T18:34:48.326Z",
     "description": "This is a series of articles complementing my book, Functional Programming in Java. Previous articles in this series may be found here: Folding the Universe, part I In the the previous article in this series, I showed how to write..."
 }
     </script>
@@ -230,41 +230,29 @@
 }</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>A "zero" knapsack is created with the given capacity. This is just a convenience to avoid calling the <code>Knapsack.empty()</code> method several times.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>A list of integers is build by first creating a list of integers from the given capacity to 1. The <code>range</code> method must be added to the <code>List</code> class.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>This list of integers is mapped to a list of knapsacks. While constructing this list (named <code>acc</code>, for <code>accumulator</code>, by convention), the previously created knapsacks are available.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>We filter the items so that we won&#8217;t try to insert items with a weight higher that what the knapsack may contain.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>We look for a previously created knapsack of index <code>item.weight - 1</code>. The <code>List.at(n)</code> method has to be created and it will return optional data, which mean a list of zero (not found) or one (found) knapsack. If this knapsack is found, the item is added to it, which is done by mapping the function <code>k &#8594; k.add(item)</code> to the singleton knapsack list.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>From the resulting list, we select the knapsack with the maximum value.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>The resulting value is added to the (head of) accumulator. This concludes the function used for folding the list of integers, in &lt;3&gt;.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>Once the list of integers is folded to a list of knapsacks, we just have to select the maximum value, which is automatically the head of the list. As the head method returns a singleton list, we use a "getOrElse" technique to select either the value if it is present, or a default value if not.</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>(1) A "zero" knapsack is created with the given capacity. This is just a convenience to avoid calling the <code>Knapsack.empty()</code> method several times.</p>
+</div>
+<div class="paragraph">
+<p>(2) A list of integers is build by first creating a list of integers from the given capacity to 1. The <code>range</code> method must be added to the <code>List</code> class.</p>
+</div>
+<div class="paragraph">
+<p>(3) This list of integers is mapped to a list of knapsacks. While constructing this list (named <code>acc</code>, for <code>accumulator</code>, by convention), the previously created knapsacks are available.</p>
+</div>
+<div class="paragraph">
+<p>(4) We filter the items so that we won&#8217;t try to insert items with a weight higher that what the knapsack may contain.</p>
+</div>
+<div class="paragraph">
+<p>(5) We look for a previously created knapsack of index <code>item.weight - 1</code>. The <code>List.at(n)</code> method has to be created and it will return optional data, which mean a list of zero (not found) or one (found) knapsack. If this knapsack is found, the item is added to it, which is done by mapping the function <code>k &#8594; k.add(item)</code> to the singleton knapsack list.</p>
+</div>
+<div class="paragraph">
+<p>(6) From the resulting list, we select the knapsack with the maximum value.</p>
+</div>
+<div class="paragraph">
+<p>(7) The resulting value is added to the (head of) accumulator. This concludes the function used for folding the list of integers, in &lt;3&gt;.</p>
+</div>
+<div class="paragraph">
+<p>(8) Once the list of integers is folded to a list of knapsacks, we just have to select the maximum value, which is automatically the head of the list. As the head method returns a singleton list, we use a "getOrElse" technique to select either the value if it is present, or a default value if not.</p>
 </div>
 <div class="paragraph">
 <p>The technique used here is very well none in Functional Programming and is called memoization. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the <code>acc</code> parameter).</p>
