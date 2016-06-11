@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Folding the Universe, part I - Functional Programming in Java</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Folding the Universe, part I">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Folding the Universe, part I">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+
+    <link rel="stylesheet" type="text/css" href="//pysaumont.github.io/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html" />
+    
+    <meta property="og:site_name" content="Functional Programming in Java" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Folding the Universe, part I" />
+    <meta property="og:description" content="Folding the Universe is actually the title of a book by Peter Engel which is subtitled &quot;Origami From Angelfish to Zen&quot;, suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is..." />
+    <meta property="og:url" content="https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html" />
+    <meta property="article:published_time" content="2016-06-10T22:00:00.000Z" />
+    <meta property="article:modified_time" content="2016-06-11T06:48:04.029Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Folding the Universe, part I" />
+    <meta name="twitter:description" content="Folding the Universe is actually the title of a book by Peter Engel which is subtitled &quot;Origami From Angelfish to Zen&quot;, suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is..." />
+    <meta name="twitter:url" content="https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Functional Programming in Java",
+    "author": {
+        "@type": "Person",
+        "name": "Pierre-Yves Saumont",
+        "image": "https://avatars.githubusercontent.com/u/10126283?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": null
+    },
+    "headline": "Folding the Universe, part I",
+    "url": "https://pysaumont.github.io/2016/06/11/Folding-the-Universe-part-I.html",
+    "datePublished": "2016-06-10T22:00:00.000Z",
+    "dateModified": "2016-06-11T06:48:04.029Z",
+    "description": "Folding the Universe is actually the title of a book by Peter Engel which is subtitled &quot;Origami From Angelfish to Zen&quot;, suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Functional Programming in Java" href="https://pysaumont.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+</head>
+<body class="post-template no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="https://pysaumont.github.io" title="link to homepage for Functional Programming in Java">Functional Programming in Java</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">This is the blog associated with my book &quot;Functional Programming in Java&quot;, published by Manning (https://manning.com/books/functional-programming-in-java). 
+    
+    Functional Programming is not tied to any &quot;functional&quot; language. It is a way of thinking and a paradigm for writing programs. Some languages are more &quot;functional friendly&quot;, and if you intend to write program using the functional paradigm,  you should probably pick one of them... if you can. This blog (and the associated book) is dedicated to those who can&#x27;t.</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="https://pysaumont.github.io/#blog" title="link to Functional Programming in Java blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+                  <!-- Github -->
+                  <li class="navigation__item">
+                    <a href="http://github.com/fpinjava/fpinjava" title="Github account">
+                      <i class='icon icon-social-github'></i>
+                      <span class="label">Github</span>
+                    </a>
+                  </li>
+                  </li>
+              
+              
+              
+              
+              
+                  <!-- Email -->
+                  <li class="navigation__item">
+                    <a href="mailto:fpinjava@fpinjava.com" title="Email fpinjava@fpinjava.com">
+                      <i class='icon icon-mail'></i>
+                      <span class="label">Email</span>
+                    </a>
+                  </li>
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="11 Jun 2016" class="post-meta__date date">11 Jun 2016</time> &#8226; <span class="post-meta__tags tags"></span>
+        <span class="post-meta__author author"><img src="https://avatars.githubusercontent.com/u/10126283?v=3" alt="profile image for Pierre-Yves Saumont" class="avatar post-meta__avatar" /> by Pierre-Yves Saumont</span>
+      </div>
+      <h1 class="post-title">Folding the Universe, part I</h1>
+    </header>
+
+    <section class="post">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Folding the Universe is actually the title of a book by Peter Engel which is subtitled "Origami From Angelfish to Zen", suggesting that anything in the universe may be modelled out of folded paper. The analogy with computer programming is interesting since in functional programming, nearly every problem can be solve with folds.</p>
+</div>
+<div class="paragraph">
+<p>Computer programming is primarily about abstraction. Instead of doing the same basic tasks again an again, we once write programs to performs these tasks, and we can then build larger programs by composing these basic tasks. Probably one difference between functional and imperative programmers is the way they handle task abstractions. Most often, imperative programmers start thinking about abstracting subtasks when they realize that they are repeatedly writing the same code. But the depth of abstraction is often kept quite minimal. The main reason is that higher level abstractions are generally provided by the language. Arithmetic operations on integers, for example, is provided by nearly all programming languages, so there is no need to write specific code to abstract them (although it is possible, and and an interesting challenge!).</p>
+</div>
+<div class="paragraph">
+<p>Loops are another kind of abstraction that is provided by many languages. Most imperative programmers would not believe that there exist programming languages without loops. Is it possible to program without loops? Of course, it is. It is even possible to program with absolutely no control structures.</p>
+</div>
+<div class="paragraph">
+<p>Maybe you think that it is possible in some very specific languages specially designed for this. Nothing could be more wrong. Take Java, for example. It is perfectly possible to write any program without ever using a for loop, a while loop, a switch case selector, or event an if..else construct. You don&#8217;t believe it? Read on.</p>
+</div>
+<div class="paragraph">
+<p>Not only you can write java program without any control structure, but you can also completely avoid variables. Is this useful? Well, avoiding variables is indeed very useful to write safer concurrent programs since it frees us from all concurrency problems, such as deadlock, livelocks, stale data, races, corruption and more. Avoiding control structures also brings many advantages, but it is more difficult to make it evident. Evidence comes with usage. But in all cases, it is a very rewarding challenge. So why not give it a try?</p>
+</div>
+<div class="paragraph">
+<p>If you are the kind of programmer who think in terms of best practices, design patterns, productivity through the use of multiple libraries, or if you have ever thought that "this is not the way Java (or anything else) has been intended to be used", or if you think that we should never try to reinvent the wheel, you should probably not continue reading. (By the way, if the wheel had not been reinvented many times, it would still be circular and spinning around its center, so there would be no cars, no trains, nor anything else using modern wheels, but this is another story.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_challenge">The challenge</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The challenge is to solve a well known computer problem while using no variables (only constants) and no control structures. We can create classes and methods, we can use the arithmetic operations and comparisons (we could do without, but we would have to design a whole number system with operators, based on folds, which is perfectly feasible, but a bit cumbersome. We will use Java 8 <code>Function</code> and <code>BiFunction</code>, because creating ours would be a waste of time (but minimal, since this would need only three lines of code each).</p>
+</div>
+<div class="paragraph">
+<p>The problem to solve is known as the Knapsack problem. Basically, it consist in packing a knapsack with items in the best possible manner. The knapsack has a maximum capacity, and each item has a name, a weight and a value. The goal is to pack the maximum value in the knapsack without exceeding its capacity. If you want to get an idea of how to solve this in a traditional imperative manner in Java, you can look at this example: <a href="https://rosettacode.org/wiki/Knapsack_problem/0-1#Java">Knapsack problem/0-1</a>. I strongly encourage you to look at the example to have an idea of how this problem may be solved in imperative style in just 300 lines of code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_handle_the_problem">How to handle the problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, we will define the business objects. Although being functional, our program will still be object oriented. The first thing we will need is a class to represent items. It will be a very basic class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class Item {
+  public final String name;
+  public final int weight;
+  public final double value;
+
+  private Item(String name, int weight, double value) {
+    this.name = name;
+    this.weight = weight;
+    this.value = value;
+  }
+
+  public String toString() {
+    return String.format("item(%s, %s, %s)", name, weight, value);
+  }
+
+  public static Item item(String name, int weight, double value) {
+    return new Item(name, weight, value);
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t like public fields, feel free to make them private an write the corresponding getters. It is absolutely useless, however, just making the code longer. Note that the factory method is for convenience. It generally allows putting validation code, which we do not have here. The <code>toString</code> method is also for convenience, in order to print the result. In fact, there is absolutely no logic here.</p>
+</div>
+<div class="paragraph">
+<p>Then, we need a class to represent the knapsack:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class Knapsack {
+
+  private final List&lt;Item&gt; items;
+  private final double value;
+  private final int weight;
+  private final int available;
+
+  private Knapsack(double value, List&lt;Item&gt; items, int weight, int available) {
+    this.value = value;
+    this.items = items;
+    this.weight = weight;
+    this.available = available;
+  }
+
+  private Knapsack add(Item item) {
+    return new Knapsack(this.value + item.value, this.items.cons(item), this.weight + item.weight, this.available - item.weight);
+  }
+
+  private boolean canAccept(Item item) {
+    return item.weight &lt;= this.available;
+  }
+
+  private Knapsack maxValue(Knapsack that) {
+    return this.value &gt;= that.value ? this : that;
+  }
+
+  public String toString() {
+    return String.format("Total value: %s\nTotal weight: %s\nItems:\n%s",
+        value, weight, items.foldRight("",
+            (item, string) -&gt; String.format("\t%s\n%s", item, string)));
+  }
+
+  private static Knapsack empty(int capacity) {
+    return new Knapsack(0.0, List.list(), 0, capacity);
+  }
+
+  private static Knapsack pack(List&lt;Item&gt; items, Knapsack knapsack) {
+    ...
+  }
+
+  public static Knapsack pack(List&lt;Item&gt; items, int knapsackCapacity) {
+    return pack(items, empty(knapsackCapacity));
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, a <code>Knapsack</code> has four properties: a list of items, a value, a weight, and an available capacity, meaning how much weight can be added before the knapsack is full. The <code>value</code> and <code>weight</code> fields are for convenience and optimization. We could compute them each time we need them, but it would waste time. They are used for memoization of the weight an value, which trades times against memory space.</p>
+</div>
+<div class="paragraph">
+<p>The constructor is private, and we have only one factory method called <code>empty</code> that creates an empty knapsack. Adding an item to the knapsack is done through the <code>add</code> method, which does not mutate anything but creates and returns a new <code>Knapsack</code> with the updated value. You might argue that the <code>List&lt;Item&gt;</code> is mutated, but it is not, because it is not a Java <code>List</code>. More on this later.</p>
+</div>
+<div class="paragraph">
+<p>There are three utility methods: <code>canAccept(Item)</code> allows knowing if the knapsack has enough available capacity to receive a given item. The <code>maxValue</code> method compares two <code>Knapsack</code> instances and returns the one with the greatest value. The <code>toString</code> method, of course, returns a readable representation of the knapsack. All these methods are for convenience and could be avoided.</p>
+</div>
+<div class="paragraph">
+<p>The interesting part is the <code>pack</code> method, which takes a list of items and a <code>Knapsack</code> and returns the <code>Knapsack</code> (in fact a new one) with as much value as possible packed in it. Plus, there is a convenience <code>pack</code> method taking a list of items and a capacity.</p>
+</div>
+<div class="paragraph">
+<p>Before looking at the core of the problem (the <code>pack</code> method), lets see how this program will be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  public static void main(String... args) {
+
+    int capacity = 400;
+
+    final List&lt;Item&gt; items = List.&lt;Item&gt;list()
+        .cons(Item.item("map", 9, 150.0))
+        .cons(Item.item("compass", 13, 35.0))
+        .cons(Item.item("water", 153, 200.0))
+        .cons(Item.item("sandwich", 50, 160.0))
+        .cons(Item.item("glucose", 15, 60.0))
+        .cons(Item.item("tin", 68, 45.0))
+        .cons(Item.item("banana", 27, 60.0))
+        .cons(Item.item("apple", 39, 40.0))
+        .cons(Item.item("cheese", 23, 30.0))
+        .cons(Item.item("beer", 52, 10.0))
+        .cons(Item.item("cream", 11, 70.0))
+        .cons(Item.item("camera", 32, 30.0))
+        .cons(Item.item("tshirt", 24, 15.0))
+        .cons(Item.item("trousers", 48, 10.0))
+        .cons(Item.item("umbrella", 73, 40.0))
+        .cons(Item.item("trousers", 42, 70.0))
+        .cons(Item.item("overclothes", 43, 75.0))
+        .cons(Item.item("notecase", 22, 80.0))
+        .cons(Item.item("sunglasses", 7, 20.0))
+        .cons(Item.item("towel", 18, 12.0))
+        .cons(Item.item("socks", 4, 50.0))
+        .cons(Item.item("book", 30, 10.0));
+
+    System.out.println(Knapsack.pack(items, capacity));
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, it is very simple, although the way the list is constructed may look a bit weird. As said earlier, this is not a Java <code>List</code>, but a functional singly linked list. It is represented by an abstract <code>List</code> class and two internal subclasses, <code>Nil</code> and <code>Cons</code> representing the empty and non empty list. A <code>Nil</code> has no property, while a <code>Cons</code> has a <code>head</code>, which is the first element in the list, and a <code>tail</code> which is the rest of the list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public abstract class List&lt;A&gt; {
+
+  public List&lt;A&gt; cons(A a) {
+    return new Cons&lt;&gt;(a, this);
+  }
+
+  private static class Nil&lt;A&gt; extends List&lt;A&gt; {
+
+  }
+
+  private static class Cons&lt;A&gt; extends List&lt;A&gt; {
+
+    private final A head;
+    private final List&lt;A&gt; tail;
+
+    private Cons(A head, List&lt;A&gt; tail) {
+      this.head = head;
+      this.tail = tail;
+    }
+  }
+
+  @SuppressWarnings("rawtypes")
+  private static List NIL = new List.Nil();
+
+  @SuppressWarnings("unchecked")
+  public static &lt;A&gt; List&lt;A&gt; list() {
+    return NIL;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, it is a very simple data structure. The parent class defines a method <code>cons</code> adding an element to the list. It has also a static factory method returning an empty list. Note that this method returns an untyped singleton, which means that their can exist only one empty list. As a consequence, all empty lists are considered equals.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_folding">Folding</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now you can see how the list of items is constructed. However, you may wonder how we could ever use this list, since there is no mean to access its elements. In fact, we only need one operation: folding the list. Any processing you can imagine on a list may be done with a fold. Folding consists in taking a value of the intended result type (generally different from the elements type) and combining it with the first element, then combining the result with the second element and so on until all elements have been processed.</p>
+</div>
+<div class="sect2">
+<h3 id="_folding_right_or_left">Folding right or left</h3>
+<div class="paragraph">
+<p>We can fold a list starting from the left (the head of the list) or for the right (the last element of the list). To fold from the left, we need a left associative operation. To fold from the right, we need&#8230;&#8203; well, you guess.</p>
+</div>
+<div class="paragraph">
+<p>Here is how we can write a <code>foldRight</code> method. First the signature in the abstract parent <code>List</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>public abstract &lt;B&gt; B foldRight(B z, BiFunction&lt;A, B, B&gt; f);</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>z</code> parameter is the starting result. It is called <code>z</code> by convention, meaning "zero", which would be the starting result for the sum of a list of integers.</p>
+</div>
+<div class="paragraph">
+<p>The operation used for the fold is represented by a <code>BiFunction</code>, taking an <code>A</code> (element of the list) and a <code>B</code> the current result) and returning a <code>B</code> (the next current result). In the <code>Nil</code> class, the implementation simply return <code>z</code>, since there is no element to which to apply the function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public &lt;B&gt; B foldRight(B z, BiFunction&lt;A, B, B&gt; f) {
+  return z;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the <code>Cons</code> class, the implementation simply combine the <code>head</code> element with the result of a recursive call to fold the <code>tail</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public &lt;B&gt; B foldRight(B z, BiFunction&lt;A, B, B&gt; f) {
+  return f.apply(head, tail.foldRight(z, f));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that this implementation is recursive, and recursion happens on the stack, so it will blow the stack for lists of more than a few thousands elements. In my book <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, I show how to make recursion happen on the heap, but this would be a bit too long for this article.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_folding_folding_folding">Folding, folding, folding&#8230;&#8203;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With this method, we can solve nearly all the problems we might have to solve. To understand how we can do this, it&#8217;s interesting to first show how we can make a copy of the list, although we will not need this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public List&lt;A&gt; copy() {
+  return foldRight(list(), (a, list) -&gt; list.cons(a));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We simply start with an empty list and add the elements to it, one after the other, starting from the right.</p>
+</div>
+<div class="paragraph">
+<p>For our specific problem, we will need a <code>map</code> method applying a function to all elements of the list. This exactly like a copy, excepted that we apply the function before inserting each element in the new list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public &lt;B&gt; List&lt;B&gt; map(Function&lt;A, B&gt; f) {
+  return foldRight(list(), (a, list) -&gt; list.cons(f.apply(a)));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We will also need a <code>flatMap</code> method doing the same thing with a function returning a list. Here is the implementation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public &lt;B&gt; List&lt;B&gt; flatMap(Function&lt;A, List&lt;B&gt;&gt; f) {
+  return foldRight(list(), (a, list) -&gt; list.foldRight(f.apply(a), (a2, list2) -&gt; list2.cons(a2)));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This may look a bit complicated, but it is in fact equivalent to the following, where the <code>concat</code> method is used to create a single list my concatenating two lists:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public &lt;B&gt; List&lt;B&gt; flatMap(Function&lt;A, List&lt;B&gt;&gt; f) {
+  return foldRight(list(), (a, list) -&gt; list.concat(f.apply(a)));
+}
+
+public List&lt;A&gt; concat(List&lt;A&gt; list) {
+  return foldRight(list, (a, acc) -&gt; acc.cons(a));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We will also need a method to return the length of the list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">private int length() {
+  return foldRight(0, (a, length) -&gt; length + 1);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, we ignore the elements, simply adding one to the result at each step. (Note that this is a very inefficient way to get the list of a list. Using memoization is much faster although it uses more memory.)</p>
+</div>
+<div class="paragraph">
+<p>Eventually, we will need to access the <code>head</code> and the <code>tail</code> of the list. But we can&#8217;t simply add methods for this, since we would not know what to return in the <code>Nil</code> class. For the tail, we could return an empty list, but what about the <code>head</code>?</p>
+</div>
+<div class="paragraph">
+<p>The solution is to return a <code>List&lt;A&gt;</code> for the head, which will either be an empty list, for a <code>Nil</code>, or a list containing a single element, in case of a <code>Cons</code>. Here is the implementation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public List&lt;A&gt; head() {
+  return foldRight(list(), (a, list) -&gt; list.length() == 0
+      ? list.cons(a)
+      : list);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the <code>tail</code>, we will return a <code>List&lt;List&lt;A&gt;&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public List&lt;List&lt;A&gt;&gt; tail() {
+  return new Cons&lt;&gt;(foldRight(list(), (a, list) -&gt; list.length() == 0
+      ? list
+      : list.cons(a)), list());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These methods are really not very efficient, but it is just to show that everything can be done with a fold. We will optimize these later.</p>
+</div>
+<div class="paragraph">
+<p>We now have all the elements we need.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_heart_of_the_problem">The heart of the problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now, you think we are left with the hard part: implementing the <code>pack</code> method. First, let&#8217;s look at the algorithm:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>look at the first element. If it does not fit in the knapsack, discard it.</p>
+</li>
+<li>
+<p>if it fits, lets make two different computations:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>first, add the element to the knapsack and continue with the rest of the list.</p>
+</li>
+<li>
+<p>second, discard the element and continue with the rest of the list.</p>
+</li>
+<li>
+<p>compare the values of the two results, select the highest, and return it.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Could&#8217;it be simpler! Here is the corresponding implementation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">private static Knapsack pack(List&lt;Item&gt; items, Knapsack knapsack) {
+    return items.head().flatMap(item -&gt; items.tail().map(itemList -&gt; knapsack.canAccept(item)
+        ? pack(itemList, knapsack).maxValue(pack(itemList, knapsack.add(item)))
+        : pack(itemList, knapsack))).foldRight(knapsack, (a, b) -&gt; a);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The only weird thing to remark is that our algorithm returns a list containing the resulting knapsack, so we extract it with <code>foldRight(knapsack, (a, b) &#8594; a)</code></p>
+</div>
+<div class="paragraph">
+<p>We&#8217;re done, and the core of our program has only three lines. (It could be written in only one line!) The <code>List</code> class is not at all specific to our program and will be used as part of our future functional library. The rest of the code (the <code>Item</code> class and the rest of the <code>Knapsack</code> class belong to the business model, and are only a description of our business data. Here is an example of what our program displays:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Total value: 1030.0
+Total weight: 396
+Items:
+    item(map, 9, 150.0)
+    item(compass, 13, 35.0)
+    item(water, 153, 200.0)
+    item(sandwich, 50, 160.0)
+    item(glucose, 15, 60.0)
+    item(banana, 27, 60.0)
+    item(cream, 11, 70.0)
+    item(trousers, 42, 70.0)
+    item(overclothes, 43, 75.0)
+    item(notecase, 22, 80.0)
+    item(sunglasses, 7, 20.0)
+    item(socks, 4, 50.0)</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_about_the_head_and_tail_methods">About the head and tail methods</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For these methods, we chose to return lists in order to be able to represent the absence of data. The main problem with this approach is that there is no mean to insure that some additional data will not be inserted by mistake in these lists. To avoid this, we generally use a different class, called <code>Option</code>, which is exactly like a <code>List</code> but where the <code>Nil</code> class is called <code>None</code> and the <code>Cons</code> class is called <code>Some</code> and has no tail. Other than this, it is exactly the same, excepted for the fold method which is called something else, like <code>getOrElse</code>. Beside this, it is sometimes difficult to distinguish between real lists (that can have several elements) and "option" lists (that can have at most one). This may make the program more difficult to read. On the other hand, it makes it much easier to compose the two cases. In a next article, I&#8217;ll show in detail what this means.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_limitations_of_this_solution">The limitations of this solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I have already indicated that since this program is recursive, and recursion in Java occurs on the stack, and since the stack has a very limited sized, this program will not work for much more than two or three thousands items. This may be out of concern, since a knapsack generally contain much less, but the problem is in fact much more general. It could be use to optimized the way to cut ropes or rods in pieces (while minimizing the loss), or to divide any quantity in the most efficient manner.</p>
+</div>
+<div class="paragraph">
+<p>Recursion is sometimes called the <code>goto</code> of functional programming. This does not mean it should not be used, but that it should be abstracted. This is exactly what <code>foldRight</code> and <code>foldLeft</code> do. In other words, it is perfectly acceptable to use recursion inside the list class, although it probably should be used only once or twice. But using it in a business program in generally a bad practice. Moreover, in the real life, if we are using Java, we might want to optimize the fold for performance, using standard Java loops. In such case, it would be even more important to encapsulate these "dirty" parts in the <code>List</code> class. Or, as I already said, we can make recursion happen on the heap rather that on the stack. To learn how to do this, please refer to my book, <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a>, or to this article: <a href="http://www.fpinjava.com/2014/12/03/Stack-safe-recursion-in-Java.html">Stack safe recursion in Java</a>.</p>
+</div>
+<div class="paragraph">
+<p>This said, there is a much radical limitation in our example. If you examine the <code>pack</code> method, you will see that it is bi-recursive, which means it calls itself twice. This means that for the first level, there will be two calls. each of these two calls will trigger two new calls, for a total of four. It is not difficult to see that this number of calls will grow exponentially. The consequence is that this program will not overflow the stack because it will never run longer enough for this. It will not work for more than around thirty items. To make this program really useful, we must find a way to write it with a single recursive call, or, better, not using recursion at all. This is what I will sho in a next article.</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+  
+  <section class="post-comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'fpinjava'; // required: replace example with your forum shortname
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </section>
+  
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2016. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//pysaumont.github.io/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+
+</body>
+</html>
