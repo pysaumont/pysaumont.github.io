@@ -188,6 +188,7 @@ We can fold a list starting from the left (the head of the list) or for the righ
 
 Here is how we can write a `foldRight` method. First the signature in the abstract parent `List` class:
 
+[source,java]
 ----
 public abstract <B> B foldRight(B z, BiFunction<A, B, B> f);
 ----
