@@ -15,7 +15,7 @@ As I said in the previous article, the challenge is to solve the problem while u
 
 To avoid bi-recursion, we have to memorize the result of each step in order not not have to compute it again and again. It is obvious that when examining an item to see if we should put it in the knapsack, we must consider what we have already put in at previous steps. What we will do is:
 
-- build a list of knapsack of capacity varying from 1 to the given capacity, in reverse order.
+- build a list of knapsacks of capacity varying from 1 to the given capacity, in reverse order.
 
 - for each item in the list,
 
@@ -27,7 +27,7 @@ To avoid bi-recursion, we have to memorize the result of each step in order not 
 
 - From the resulting knapsack list, select the one with the maximum value. This is the result of the packing.
 
-Note that if we add a knapsack to the list, we put it in front of the list. So, the knapsack with the maximum value will simply be the head of the list. This is why we select the knapsack of index (`item.weight - 1`). This corresponds to an index of `i - it.weight` if the list was build the other way, where `i` would be the index of the knapsack we are in.
+Note that if we add a knapsack to the list, we put it in front of the list. So, the knapsack with the maximum value will simply be the head of the list. This is why we select the knapsack of index (`item.weight - 1`). This would correspond to an index of `i - it.weight` if the list was build the other way, where `i` would be the index of the knapsack we are in.
 
 Here is the corresponding code:
 
@@ -47,7 +47,7 @@ public static Knapsack pack(List<Item> items, int capacity) {
 
 (1) A "zero" knapsack is created with the given capacity. This is just a convenience to avoid calling the `Knapsack.empty()` method several times.
 
-(2) A list of integers is build by first creating a list of integers from the given capacity to 1. The `range` method must be added to the `List` class.
+(2) A list of integers from the given capacity to 1 is built by calling the `range` method. This method must be added to the `List` class.
 
 (3) This list of integers is mapped to a list of knapsacks. While constructing this list (named `acc`, for "accumulator", by convention), the previously created knapsacks are available.
 
@@ -61,7 +61,7 @@ public static Knapsack pack(List<Item> items, int capacity) {
 
 (8) Once the list of integers is folded to a list of knapsacks, we just have to select the maximum value, which is automatically the head of the list. As the head method returns a singleton list, we use a "getOrElse" technique to select either the value if it is present, or a default value if not.
 
-The technique used here is very well none in functional programming and is called memoization. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the `acc` parameter).
+The technique used here is very well known in functional programming and is called _memoization_. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the `acc` parameter).
 
 == Implementing the missing methods
 
