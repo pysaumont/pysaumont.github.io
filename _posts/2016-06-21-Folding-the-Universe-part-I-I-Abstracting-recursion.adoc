@@ -1,4 +1,4 @@
-= Folding the Universe, part II
+= Folding the Universe, part II: Abstracting recursion
 :published_at: 2016-06-21
 
 This is a series of articles complementing my book, https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java]. Previous articles in this series may be found here:
@@ -61,7 +61,7 @@ public static Knapsack pack(List<Item> items, int capacity) {
 
 (8) Once the list of integers is folded to a list of knapsacks, we just have to select the maximum value, which is automatically the head of the list. As the head method returns a singleton list, we use a "getOrElse" technique to select either the value if it is present, or a default value if not.
 
-The technique used here is very well known in functional programming and is called _memoization_. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the `acc` parameter).
+The technique used here is very well known in functional programming and is called _memoization_. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported during the fold (in the `acc` parameter).
 
 == Implementing the missing methods
 
@@ -101,7 +101,7 @@ This method is even less efficient since it uses the `head` method defined in th
 
 == Solving the real problem
 
-Beside efficiency, we have a more important problem: our program does not solve our real problem, because it allows using several times the same item. It was done this way for simplification. Now, we can fix this easily:
+Beside efficiency, we have a more important issue: our program does not solve our real problem, because it allows using several times the same item. It was done this way for simplification. Now, we can fix this easily:
 
 [source,java]
 ----
@@ -139,7 +139,7 @@ public boolean contains(A a) {
 
 Again, this method is not optimized, since it will have to traverse the whole list instead of escaping as soon as a matching element is found.
 
-Note that we must define an `equal` method in our `Item` class. I will not show it here, since you certainly know how to do this. Moreover, any good IDE will generate it for you. However, to be really complete, we should add a unique ID to the `Item` class. Forgetting to do so will make impossible to have two different items with the same weight and value in the list. A very simple way to do this, if the ID is not to be used for anything else, is to generate a UUID and use it for equality:
+Note that we must define an `equals` method in our `Item` class. I will not show it here, since you certainly know how to do this. Moreover, any good IDE will generate it for you. However, to be really complete, we should add a unique ID to the `Item` class. Forgetting to do so will make impossible to have two different items with the same weight and value in the list. A very simple way to do this, if the ID is not to be used for anything else, is to generate a UUID and use it for equality:
 
 [source,java]
 ----
@@ -269,7 +269,7 @@ public static Knapsack pack(List<Item> items, int capacity) {
 
 (2) The `map` method is called on an `Option`, but it is difficult to see by looking at the code!
 
-(3) Getting the value (if present) or a default value (if not) is done through the `getOrElse` method. We changed the name to follow current usage although it is implemented through a fold!
+(3) Getting the value (if present) or a default value (if not) is done through the `getOrElse` method. We changed the name to follow conventional usage although it is implemented through a fold!
 
 (4) We can simplify getting the value or default value from the resulting `Option`.
 
