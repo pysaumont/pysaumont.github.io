@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is a series of articles complementing my book, Functional Programming in Java. Previous articles in this series may be found here: Folding the Universe, part I In the the previous article in this series, I showed how to write..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/06/21/Folding-the-Universe-part-I-I.html" />
     <meta property="article:published_time" content="2016-06-20T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-06-21T20:27:30.355Z" />
+    <meta property="article:modified_time" content="2016-06-21T20:37:23.840Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part II" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part II",
     "url": "https://pysaumont.github.io/2016/06/21/Folding-the-Universe-part-I-I.html",
     "datePublished": "2016-06-20T22:00:00.000Z",
-    "dateModified": "2016-06-21T20:27:30.355Z",
+    "dateModified": "2016-06-21T20:37:23.840Z",
     "description": "This is a series of articles complementing my book, Functional Programming in Java. Previous articles in this series may be found here: Folding the Universe, part I In the the previous article in this series, I showed how to write..."
 }
     </script>
@@ -187,7 +187,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p>build a list of knapsack of capacity varying from 1 to the given capacity, in reverse order.</p>
+<p>build a list of knapsacks of capacity varying from 1 to the given capacity, in reverse order.</p>
 </li>
 <li>
 <p>for each item in the list,</p>
@@ -211,7 +211,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>Note that if we add a knapsack to the list, we put it in front of the list. So, the knapsack with the maximum value will simply be the head of the list. This is why we select the knapsack of index (<code>item.weight - 1</code>). This corresponds to an index of <code>i - it.weight</code> if the list was build the other way, where <code>i</code> would be the index of the knapsack we are in.</p>
+<p>Note that if we add a knapsack to the list, we put it in front of the list. So, the knapsack with the maximum value will simply be the head of the list. This is why we select the knapsack of index (<code>item.weight - 1</code>). This would correspond to an index of <code>i - it.weight</code> if the list was build the other way, where <code>i</code> would be the index of the knapsack we are in.</p>
 </div>
 <div class="paragraph">
 <p>Here is the corresponding code:</p>
@@ -234,7 +234,7 @@
 <p>(1) A "zero" knapsack is created with the given capacity. This is just a convenience to avoid calling the <code>Knapsack.empty()</code> method several times.</p>
 </div>
 <div class="paragraph">
-<p>(2) A list of integers is build by first creating a list of integers from the given capacity to 1. The <code>range</code> method must be added to the <code>List</code> class.</p>
+<p>(2) A list of integers from the given capacity to 1 is built by calling the <code>range</code> method. This method must be added to the <code>List</code> class.</p>
 </div>
 <div class="paragraph">
 <p>(3) This list of integers is mapped to a list of knapsacks. While constructing this list (named <code>acc</code>, for "accumulator", by convention), the previously created knapsacks are available.</p>
@@ -255,7 +255,7 @@
 <p>(8) Once the list of integers is folded to a list of knapsacks, we just have to select the maximum value, which is automatically the head of the list. As the head method returns a singleton list, we use a "getOrElse" technique to select either the value if it is present, or a default value if not.</p>
 </div>
 <div class="paragraph">
-<p>The technique used here is very well none in functional programming and is called memoization. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the <code>acc</code> parameter).</p>
+<p>The technique used here is very well known in functional programming and is called <em>memoization</em>. It consists in keeping access to the previous results instead of recomputing them at each step. This technique is also used in imperative programming. The particularity of the functional programming version is the way the previous results are transported in the fold (in the <code>acc</code> parameter).</p>
 </div>
 </div>
 </div>
