@@ -9,7 +9,7 @@ Let's say we have only two instructions in our programming language: incrementat
 
 == Corecursive and recursive addition examples
 
-In order to add two numbers, `x` and `y`, we can do the following:
+In order to add two positive numbers, `x` and `y`, we can do the following:
 
  *	if `y == 0`, return `x`
 
@@ -21,8 +21,8 @@ This may be written in Java as:
 ----
 static int add(int x, int y) {
   while(y > 0) {
-    x = ++x;
-    y = --y;
+    ++x;
+    --y;
   }
   return x;
 }
@@ -34,7 +34,7 @@ or simpler:
 ----
 static int add(int x, int y) {
   while(y-- > 0) {
-    x = ++x;
+    ++x;
   }
   return x;
 }
@@ -47,7 +47,7 @@ Note that there is no problem with using the parameters `x` and `y` directly, si
 ----
 static int add(int x, int y) {
   while(--y >= 0) {
-    x = ++x;
+    ++x;
   }
   return x;
 }
