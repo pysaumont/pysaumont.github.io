@@ -277,9 +277,10 @@ A (temporary!) solution is to return a `List<A>` for the head, which will either
 [source,java]
 ----
 public List<A> head() {
-  return foldRight(list(), (a, list) -> list.length() == 0
+  int length = this.length();
+  return foldRight(list(), (a, list) -> length - list.length() != 1
       ? list.cons(a)
-      : list);
+      : List.<A>list().cons(a));
 }
 ----
 
@@ -288,13 +289,14 @@ For the `tail`, we will return a `List<List<A>>`:
 [source,java]
 ----
 public List<List<A>> tail() {
-  return new Cons<>(foldRight(list(), (a, list) -> list.length() == 0
+  int length = this.length();
+  return new Cons<>(foldRight(list(), (a, list) -> length - list.length() == 1
       ? list
       : list.cons(a)), list());
 }
 ----
 
-These methods are really not very efficient, but it is just to show that everything can be done with a fold. We will optimize these later.
+These methods are really not efficient, but it is just to show that everything can be done with a fold. We will optimize these later by declaring abstract methods in the parent class and writing much simpler implementations in each subclass.
 
 We now have all the elements we need.
 
