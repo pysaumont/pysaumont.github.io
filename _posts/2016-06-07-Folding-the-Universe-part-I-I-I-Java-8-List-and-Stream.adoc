@@ -1,0 +1,463 @@
+= Folding the Universe, part III : Java 8 List and Stream
+:published_at: 2016-06-07
+
+This is the third article in a series about using functional programming techniques like folds to Java programs. This series is a complement to my book https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java] published by Manning.
+
+First two articles are available here:
+
+- http://www.fpinjava.com/2014/12/03/Folding-the-Universe-part-I.html[Folding the Universe, part I]
+
+- http://www.fpinjava.com/2014/12/03/Folding-the-Universe-part-I.html[Folding the Universe, part I]
+
+In the two previous articles of this in series, I showed how nearly every problem could be modeled as folds. This does not in any way mean that all solutions should be implemented using folds. Folding a list with a single element might be a good idea when this is a special case of a list with an arbitrary number of elements. On the other hand, using the same implementation to fold lists that never have more than one element makes little sense beside understanding the common parts of two different problems.
+
+== List persistence and element mutability
+
+The word "fold" generally refers to some technical manipulation that is applied to a collection. In other words, it mostly describes a computation, rather that the result of this computation. There are other terms that are more or less synonymous, the most often used being "reduction". The concept of reduction is present in the more general concept of "map/reduce". In the previous articles, I showed that "mapping" could be implemented through a fold, which implies that mapping would, in such case, be an operation implying folding. This is not true. Mapping may be implemented using a fold, but it may also be implemented without it, depending of the implementation of the collection.
+
+For this discussion, we have to consider collection implementations under a specific criteria: persistence. There are basically two ways to implement collections. The first way is the way Java uses for `ArrayList`. The list is backed by an array, and you can modify it by adding, removing or replacing array elements. Of course, the implementation take cares of consistency. You can only add elements at some places, typically before the first, after the last or between two elements. You can't have "holes" in the array. An when inserting, the implementation take cares of moving the subsequent elements. But this is an implementation detail, as is the fact that when the array is full, the implementation takes care of copying the elements in a larger array in order to allow adding more elements.
+
+Such an implementation has many benefits, the main one being that it is fast, allowing constant time access to any element by its index. It also has a number of drawbacks. When growing beside the size of the original array, copying the elements to a new larger one will take additional time. Replacing an element with a new one is possible, which is a benefit, but this is generally incompatible with some access techniques. This makes this kind of collection good to store mutable elements, that can be modified in place, but makes it difficult to use with immutable elements since such elements may not be mutated and have to be replaced by a new ones. To understand the problem, think about a `List<String>` of names that you want to switch to upper case. You can't do the following:
+
+[source,java]
+----
+List<String> names = new ArrayList<>(Arrays.asList("Mickey", "Donald", "Pluto"));
+for(String name : names) {
+  name.toUpperCase();
+}
+----
+
+This does not work because `String` is immutable, so the `toUpperCase` method does not change a string in any way, but it returns a new string with the modification applied. This wont't work neither because we are updating the `name` variable, and not the list:
+
+[source,java]
+----
+List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"));
+for(String name : names) {
+  name = name.toUpperCase();
+}
+----
+
+Whether immutable objects are better or worse than mutable one is a different problem. What appears here is that immutable objects does not fit well with mutable lists. This is a marginal problem since Java objects are more than often implemented with mutable properties. Let's say we have defined a `Name` class such as:
+
+[source,java]
+----
+public class Name {
+  String value;
+
+  public Name(String value) {
+    this.value = value;
+  }
+
+  public void toUpperCase() {
+    value = value.toUpperCase();
+  }
+
+  public String toString() {
+    return value;
+  }
+}
+----
+
+With such a class, using Java lists makes more sense:
+
+[source,java]
+----
+List<Name> names = new ArrayList<>(Arrays.asList(new Name("mickey"), new Name("donald"), new Name("pluto")));
+for(Name name : names) {
+  name.toUpperCase();
+}
+----
+
+Since Java 8, this even makes more sense since you can write:
+
+[source,java]
+----
+List<Name> names = new ArrayList<>(Arrays.asList(new Name("mickey"), new Name("donald"), new Name("pluto")));
+names.forEach(Name::toUpperCase);
+----
+
+But with immutable objects like strings, we have to resort to folding, or reduction, to achieve the same goal:
+
+[source,java]
+----
+List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"));
+List<String> namesUpper = new ArrayList<>();
+for(String name : names) {
+  namesUpper.add(name.toUpperCase());
+}
+----
+
+(Yes, I know that there are much better ways to solve this problem. This is just for demonstration.)
+
+Of course, we would want to abstract this into a specific method that we could put in a library:
+
+[source,java]
+----
+  List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"));
+  List<String> namesUpper = reduce(names, String::toUpperCase);
+
+...
+
+private static List<String> reduce(List<String> names, UnaryOperator<String> operator) {
+  List<String> namesUpper = new ArrayList<>();
+  for(String name : names) {
+    namesUpper.add(name.toUpperCase());
+  }
+  return namesUpper;
+}
+----
+
+And we would also want to make this method generic, so that it could be used with any type and any operation:
+
+[source,java]
+----
+private static <A, B> List<B> reduce(List<A> as, Function<A, B> f) {
+  List<B> bs = new ArrayList<>();
+  for(A a : as) {
+    bs.add(f.apply(a));
+  }
+  return bs;
+}
+----
+
+Note that the method is called `reduce` because it reduces a collection of values to a single value. The fact that this single value happens to be a list is misleading, reduction to collections are generally not called reduction, and this is why "fold" is probably a better name.
+
+== Reduction of fold ?
+
+Another common difference between what people call "reduction" and "fold" is the way the "empty" case is treated. Here, if the 'List<A>' to fold is empty, we return an empty 'List<B>'. This shows the limits of this approach. The value to return in case of an empty argument list is known only because the return type is known. We can imagine that this special value to return in case of an empty argument list of A is a an empty list of B. In the same way, if we were to return the sum of a list of integers, we would guess that the value to return for an empty list would be 0. This is because we know the "identity" element (of "neutral" element) of the operation. But if we want to make our method even more generic, we have to make it accept an additional parameter.
+
+We may also remark that we are in fact doing to different things. One is reducing the list to a single  value that happens to be a new list, the other one is converting the elements to upper case. This last operation is in fact what is called a "mapping". So we may make the whole thing fully generic by adding a separate function:
+
+[source,java]
+----
+  List<String> identity = new ArrayList<>();
+  List<String> namesUpper = mapReduce(names, identity, FoldLibrary::add, String::toUpperCase);
+
+...
+
+private static <A> List<A> add(A a, List<A> list) {
+  list.add(a);
+  return list;
+}
+
+private static <A, B, C> C mapReduce(List<A> as, C identity, BiFunction<B, C, C> accumulator, Function<A, B> mapper) {
+  C result = identity;
+  for(A a : as) {
+    result = accumulator.apply(mapper.apply(a), result);
+  }
+  return result;
+}
+----
+
+Of course, these methods could have been implemented in the `List`. But to be exhaustive, we should deal with the fact that Java 'List' is mutable. So we should make a defensive copy of the list before iterating on it, since it could happen that the list be modified by another thread while we are iterating, which would produce an exception. Of course, this copy should be made atomically. But we do not have to worry about this, because all as been done for us in the `Stream` class.
+
+== Folding (or reducing) with streams
+
+Transforming a `List` into a `Stream` is just a matter of calling the `stream()` method on the list:
+
+[source,java]
+----
+List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"));
+names.stream()...
+----
+
+Then, looking at the 'Stream' interface, we can see three `reduce` methods:
+
+[source,java]
+----
+T reduce(T identity, BinaryOperator<T> accumulator);
+Optional<T> reduce(BinaryOperator<T> accumulator);
+<U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner);
+----
+
+Which one should we use? None o them. The first one is used to reduce a `Stream` to a value of the same type than the list elements, for example to sum a list of integers. This method takes the identity for the given operation as its first argument.
+
+The second one is use for the same thing when no identity is provided. In such case, the first element is taken as the starting element (we can't call it "identity"). As there might not always be such an element (if the list is empty) the method returns an `Optional` that may contain the result or be empty.
+
+The third method is used to reduce the list to a single value of a different type than the elements type. It takes an `identity` argument and a `BiFunction` accumulator, as in our example but no mapper, but a combiner. The absence of a mapper means that we will have to separately `map` the list prior to reducing, which is not a big deal. The combiner is used when the stream is processed in parallel. In such a case, it is broken in sub streams that are reduced in parallel, producing a number of partial results that must then be combined, hence the need for a combiner. As we will not process the stream in parallel, we don't need the combiner, so we may pass whatever we want as the last parameter, provided that it compiles. For example:
+
+[source,java]
+----
+List<String> identity = new ArrayList<>();
+List<String> namesUpper2 = names.stream().map(String::toUpperCase).reduce(identity, FoldLibrary::add, FoldLibrary::combine);
+
+...
+
+private static <U> List<U> combine(List<U> list1, List<U> list2) {
+  list1.addAll(list2);
+  return list1;
+}
+
+private static <A> List<A> add(List<A> list, A a) {
+  list.add(a);
+  return list;
+}
+----
+
+There are four important things to note here:
+
+1. This is not the way you should reduce a list to a new list. No need to protest, it is just for demo purpose.
+
+2. The `add` method is not the same as in the previous example. Arguments are in reverse order, so that a method reference may be used.
+
+3. The `combine` method can do whatever you want, it will not change anything until you activate parallel processing. But the combiner can't be `null`.
+
+4. The `identity` list may not be shared. This is a very common source of bugs. Remember that Java lists are not persistent. Once the `identity` list will have been used, it will contain the result of the reduction!
+
+== Using collectors
+
+As I said previously, this is not the way to reduce a list to a new list. For this, we are supposed to use a `Collector`. Java 8 contains a `Collectors` (note the terminal "s") class that contains factory methods returning various `Collector` instances. But we will first look at the more general way. In our example, here is how we would use a collector:
+
+[source,java]
+----
+List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"));
+List<String> namesUpper3 = names.stream().map(String::toUpperCase).collect(collector);
+----
+
+Here `collector` is an instance of a class implementing the `Collector` interface. If you use an IDE, you may simply declare an anonymous class and let the IDE provide the method stubs for you. You must however provide the type parameters. A `Collector` takes three type parameters:
+
+- The first one is the type of the stream elements (in our case, `String`)
+
+- The third one is the expected type of the reduced value (in our case `List<String>`)
+
+- The second is an intermediate type that would be necessary in case we would first have to reduce to this type before transforming the result into the expected type. If you have trouble to understand what this mean, maybe the official documentation can help. It states that this type is _the mutable accumulation type of the reduction operation (often hidden as an implementation detail)_. If this is not clearer, don't be afraid. We will see an example soon. For the time being, consider that it is the same type as the expected result type, thus `List<String>`.
+
+Now you can declare an anonymous class implementing the `Collector` interface and let the IDE provide empty implementations:
+
+[source,java]
+----
+Collector<String, List<String>, List<String>> collector = new Collector<String, List<String>, List<String>>() {
+  @Override
+  public Supplier<List<String>> supplier() {
+    return null;
+  }
+
+  @Override
+  public BiConsumer<List<String>, String> accumulator() {
+    return null;
+  }
+
+  @Override
+  public BinaryOperator<List<String>> combiner() {
+    return null;
+  }
+
+  @Override
+  public Function<List<String>, List<String>> finisher() {
+    return null;
+  }
+
+  @Override
+  public Set<Characteristics> characteristics() {
+    return null;
+  }
+};
+----
+
+The `supplier` method is used to provide the identity element, so the implementation is obvious:
+
+[source,java]
+----
+public Supplier<List<String>> supplier() {
+  return ArrayList::new;
+}
+----
+
+The `accumulator` methods is the main difference between the use of a `Collector` and the `reduce` method. In the `reduce` method, the accumulator was a `BiFunction` which forced us to create a functional method for adding an element to a list (returning the modified list). The `Collector` interface uses a `BiConsumer`, allowing direct use of the `List.add` method:
+
+and `combiner` methods have the same role as in our previous example:
+
+[source,java]
+----
+public BiConsumer<List<String>, String> accumulator() {
+  return List::add;
+}
+----
+
+Note that using our previous `Library.add` method would work too, since this was simply a wrapper around a list mutation. Our `BiFunction` had a side effect, and this side effect would allow us using it here. Although the method is supposed to return a `BiConsumer`, a `BiFunction` is ok as long as we do not specify the type explicitly. This can be the source of very nasty bugs, because one will rarely search for bugs in a program that is actually working as expected!
+
+The combiner is identical to what we used for the `reduce` method:
+
+[source,java]
+----
+public BinaryOperator<List<String>> combiner() {
+  return FoldLibrary::combine;
+}
+----
+
+One important difference (not visible here) is that the parameter type of the `BinaryOperator` returned by the `combine` method, as well as the first parameter type of the `BiConsumer` returned by the `accumulator` method, are not the expected result type but the _the mutable accumulation type of the reduction_, meaning an intermediate type that could be used to simplify the implementation (or make it more efficient). For example, we could work on arrays of `String` and eventually transform the result into a `List<String>`. In such a case, this ultimate transformation would be made by the `finisher` method. The `finisher` method may also be used to "decorate" the result (we will see an example soon). For now, the implementation does nothing beside returning its argument:
+
+[source,java]
+----
+public Function<List<String>, List<String>> finisher() {
+   return Function.identity();
+}
+----
+
+Note that we are talking of the implementation of the function returned by the `finisher` method, not the method itself. A function returning its argument unchanged could be written as a lambda: `a -> a`, but it is cleaner to use the one returned by the `Function.identity()` method (which by the way uses a lambda for its implementation).
+
+The last method is meant to provide additional information about the reduction. `Characteristic` is an enum with three possible values:
+
+- `CONCURRENT` indicates that the reduction can be done in parallel (meaning that the `combiner` method would be used to assemble the partial results.
+
+- `UNORDERED` indicates that the order of the element is meaningless regarding the reduction. This, for example, would be true for the sum of a list of integers, but not for our example where the order of the strings should be preserved.
+
+- `IDENTITY_FINISH` means that the `finisher` methods returns the `identity` function and thus can be ignored. If this value is selected, the finisher function will not be called and the result will simply be casted to the expected result type. In such case, the `finisher` function may be made to return `null`, although it is certainly not a good idea.
+
+In our case, we only need to return the `IDENTITY_FINISH` value, which should be done as:
+
+[source,java]
+----
+public Set<Characteristics> characteristics() {
+  return Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
+}
+----
+
+The `EnumSet.of` method takes a vararg argument, so you can add the other enum values as necessary, in a comma separated list.
+
+As you can see, the two methods used to reduce (or fold) a list to a new list are pretty equivalent, beside the fact that the `Collector` leverage the fact that java lists are not persistent and use "in place" modification.
+
+Also note that unlike folds that we saw in the two previous articles, you have no choice here about doing the operation from right to left. Java 8 reduction is at best equivalent to a left fold (if the `UNORDERED` characteristic is not selected).
+
+Folding a list into a new list is so common that Java 8 provides a factory method returning the necessary collector:
+
+[source,java]
+----
+List<String> namesUpper = names.stream().map(String::toUpperCase).collect(Collectors.toList());
+----
+
+Does this mean that it is useless to know how collectors work? Not at all. Here is an example of folding the same list of strings into a comma separated list included between brackets. Once again, this might not be the simplest way to "join" a list of elements, and is only for demonstration purpose:
+
+[source,java]
+----
+Collector<Integer, StringBuilder, String> stringCollector = new Collector<Integer, StringBuilder, String>() {
+  @Override
+  public Supplier<StringBuilder> supplier() {
+    return StringBuilder::new;
+  }
+
+  @Override
+  public BiConsumer<StringBuilder, Integer> accumulator() {
+    return (sb, i) -> sb.append(sb.length() == 0 ? "" : ", ").append(i);
+  }
+
+  @Override
+  public BinaryOperator<StringBuilder> combiner() {
+    return StringBuilder::append;
+  }
+
+  @Override
+  public Function<StringBuilder, String> finisher() {
+    return sb -> sb.insert(0, '[').append(']').toString();
+  }
+
+  @Override
+  public Set<Characteristics> characteristics() {
+    return Collections.emptySet();
+  }
+};
+
+List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+System.out.println(list.stream().collect(stringCollector));
+----
+
+This prints:
+
+[source,java]
+----
+[1, 2, 3, 4, 5, 6]
+----
+
+Of course, you will want to push abstraction a bit farther. Creating such delimited strings from a list can be parameterized by the the prefix, the separator and the postfix. This can be obtained by creating a factory method for the comparator:
+
+[source,java]
+----
+    List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+    System.out.println(list.stream().collect(toDelimitedString("[", ", ", "]")));
+
+public static <T> Collector<T, StringBuilder, String> toDelimitedString(String prefix, String separator, String postFix) {
+  return new Collector<T, StringBuilder, String>() {
+    @Override
+    public Supplier<StringBuilder> supplier() {
+      return StringBuilder::new;
+    }
+
+    @Override
+    public BiConsumer<StringBuilder, T> accumulator() {
+      return (sb, i) -> sb.append(sb.length() == 0 ? "" : separator).append(i);
+    }
+
+    @Override
+    public BinaryOperator<StringBuilder> combiner() {
+      return StringBuilder::append;
+    }
+
+    @Override
+    public Function<StringBuilder, String> finisher() {
+      return sb -> sb.insert(0, prefix).append(postFix).toString();
+    }
+
+    @Override
+    public Set<Characteristics> characteristics() {
+      return Collections.emptySet();
+    }
+  };
+}
+----
+
+== Adding map to perform map/reduce with a reducing collector
+
+But "collecting", as Java 8 calls folding and reducing, is generally not used alone, but associated with a map operation (map/reduce). If we where to add tax and format the result with a currency before reducing them to a delimited string, we could write:
+
+[source,java]
+----
+list.stream().map(TaxComputer::addTax).map(Formatter::addCurrency).collect(toDelimitedString("[", ", ", "]"))
+----
+
+Any combination of `map` may be replaced with a single one using function composition:
+
+[source,java]
+----
+List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+Function<Integer, Double> addTax = TaxComputer::addTax;
+Function<Double, String> format = Formatter::format;
+System.out.println(list.stream().map(format.compose(addTax)).collect(toDelimitedString("[", ", ", "]")));
+----
+
+Of course, you can also compose the methods and use a method reference for the mapping. One you have a single mapping, you can do a map/reduce using one of the reducing collectors provided byt the `Collector` class:
+
+[source,java]
+----
+public static <T> Collector<T, ?, T> reducing(T identity, BinaryOperator<T> op)
+public static <T> Collector<T, ?, Optional<T>> reducing(BinaryOperator<T> op)
+public static <T, U> Collector<T, ?, U> reducing(U identity, Function<? super T, ? extends U> mapper, BinaryOperator<U> op)
+----
+
+The third one is what we need:
+
+[source,java]
+----
+list.stream().collect(Collectors.reducing("", format.compose(addTax), (String a, String b) -> a + (a.length() == 0 ? "" : ", ") + b));
+----
+
+but the absence of a `finisher` method makes it more difficult to add a prefix and a postfix. This can however be done the following way, although it is quite dirty:
+
+[source,java]
+----
+list.stream().collect(Collectors.reducing("[", format.compose(addTax), (String a, String b) -> a + (a.length() == 1 ? "" : ", ") + b)) + "]";
+----
+
+Note that we do not test the length of the string for 0 to know whether we must add a delimiter, but for 1, which is actually the length of the first delimiter. A cleaner version would be:
+
+[source,java]
+----
+String startDelimiter = "[";
+String endDelimiter = "]";
+Strign result = list.stream().collect(Collectors.reducing(startDelimiter, format.compose(addTax), (String a, String b) -> a + (startDelimiter.equals(a) ? "" : ", ") + b)) + endDelimiter;
+----
+
+== Conclusion
+
+We have seen most of the techniques provided by Java 8 to program fold/reduce operation combined with map. So what is the best one? It is difficult to answer this question. Of course, it would seem natural to use the standard Java 8 tools. But this tools are awkward because they are meant to adapt functional techniques that are supposed to be used with persistent data structures to Java 8 data structures that are not persistent. A specific example of this is the use of a `BiConsumer` instead of a `BiFunction` for collectors, and the fact that inadvertently using a `BiFunction` instead of a `BiConsumer` could still work if this function has the same side effect as the effect of the expected `BiConsumer`. The alternative is to use a functional data structure instead of a Java `List` as we saw in the two previous articles of this series. But how do this compare to the Java 8 `Collector` way in terms of performance? This is what we will see in the next article.
+
+Remember that this article is a complement to my book https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java]. Do not hesitate to have a look at it if you are interested by applying functional programming techniques to Java programs.
