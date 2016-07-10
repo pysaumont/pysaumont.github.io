@@ -56,13 +56,15 @@ public class Name {
     return value;
   }
 }
-----
+---- 
 
 With such a class, using Java lists makes more sense:
 
 [source,java]
 ----
-List<Name> names = new ArrayList<>(Arrays.asList(new Name("mickey"), new Name("donald"), new Name("pluto")));
+List<Name> names = new ArrayList<>(Arrays.asList(new Name("mickey"), 
+                                                 new Name("donald"), 
+                                                 new Name("pluto")));
 for(Name name : names) {
   name.toUpperCase();
 }
@@ -71,8 +73,10 @@ for(Name name : names) {
 Since Java 8, this even makes more sense since you can write:
 
 [source,java]
-----
-List<Name> names = new ArrayList<>(Arrays.asList(new Name("mickey"), new Name("donald"), new Name("pluto")));
+----     
+List<Name> names = new ArrayList<>(Arrays.asList(new Name("mickey"), 
+                                                 new Name("donald"), 
+                                                 new Name("pluto")));
 names.forEach(Name::toUpperCase);
 ----
 
@@ -93,12 +97,14 @@ Of course, we would want to abstract this into a specific method that we could p
 
 [source,java]
 ----
-  List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"));
+  List<String> names = new ArrayList<>(Arrays.asList("mickey", 
+                                                     "donald", 
+                                                     "pluto"));
   List<String> namesUpper = reduce(names, String::toUpperCase);
 
 ...
 
-private static List<String> reduce(List<String> names, UnaryOperator<String> operator) {
+static List<String> reduce(List<String> names, UnaryOperator<String> operator) {
   List<String> namesUpper = new ArrayList<>();
   for(String name : names) {
     namesUpper.add(name.toUpperCase());
@@ -111,7 +117,7 @@ And we would also want to make this method generic, so that it could be used wit
 
 [source,java]
 ----
-private static <A, B> List<B> reduce(List<A> as, Function<A, B> f) {
+static <A, B> List<B> reduce(List<A> as, Function<A, B> f) {
   List<B> bs = new ArrayList<>();
   for(A a : as) {
     bs.add(f.apply(a));
