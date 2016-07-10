@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Folding the Universe, part III : Java 8 List and Stream - Functional Programming in Java</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Folding the Universe, part III : Java 8 List and Stream">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+
+    <link rel="stylesheet" type="text/css" href="//pysaumont.github.io/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
+    
+    <meta property="og:site_name" content="Functional Programming in Java" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Folding the Universe, part III : Java 8 List and Stream" />
+    <meta property="og:description" content="This is the third article in a series about using functional programming techniques like folds to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
+    <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
+    <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
+    <meta property="article:modified_time" content="2016-07-10T17:03:07.497Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
+    <meta name="twitter:description" content="This is the third article in a series about using functional programming techniques like folds to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
+    <meta name="twitter:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Functional Programming in Java",
+    "author": {
+        "@type": "Person",
+        "name": "Pierre-Yves Saumont",
+        "image": "https://avatars.githubusercontent.com/u/10126283?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": null
+    },
+    "headline": "Folding the Universe, part III : Java 8 List and Stream",
+    "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
+    "datePublished": "2016-07-05T22:00:00.000Z",
+    "dateModified": "2016-07-10T17:03:07.497Z",
+    "description": "This is the third article in a series about using functional programming techniques like folds to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Functional Programming in Java" href="https://pysaumont.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+</head>
+<body class="post-template no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="https://pysaumont.github.io" title="link to homepage for Functional Programming in Java">Functional Programming in Java</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">This is the blog associated with my book &quot;Functional Programming in Java&quot;, published by Manning (https://manning.com/books/functional-programming-in-java). 
+    
+    Functional Programming is not tied to any &quot;functional&quot; language. It is a way of thinking and a paradigm for writing programs. Some languages are more &quot;functional friendly&quot;, and if you intend to write program using the functional paradigm,  you should probably pick one of them... if you can. This blog (and the associated book) is dedicated to those who can&#x27;t.</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="https://pysaumont.github.io/#blog" title="link to Functional Programming in Java blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+                  <!-- Github -->
+                  <li class="navigation__item">
+                    <a href="http://github.com/fpinjava/fpinjava" title="Github account">
+                      <i class='icon icon-social-github'></i>
+                      <span class="label">Github</span>
+                    </a>
+                  </li>
+                  </li>
+              
+              
+              
+              
+              
+                  <!-- Email -->
+                  <li class="navigation__item">
+                    <a href="mailto:fpinjava@fpinjava.com" title="Email fpinjava@fpinjava.com">
+                      <i class='icon icon-mail'></i>
+                      <span class="label">Email</span>
+                    </a>
+                  </li>
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="06 Jul 2016" class="post-meta__date date">06 Jul 2016</time> &#8226; <span class="post-meta__tags tags"></span>
+        <span class="post-meta__author author"><img src="https://avatars.githubusercontent.com/u/10126283?v=3" alt="profile image for Pierre-Yves Saumont" class="avatar post-meta__avatar" /> by Pierre-Yves Saumont</span>
+      </div>
+      <h1 class="post-title">Folding the Universe, part III : Java 8 List and Stream</h1>
+    </header>
+
+    <section class="post">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is the third article in a series about using functional programming techniques like folds to Java programs. This series is a complement to my book <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a> published by Manning.</p>
+</div>
+<div class="paragraph">
+<p>First two articles are available here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.fpinjava.com/2014/12/03/Folding-the-Universe-part-I.html">Folding the Universe, part I</a></p>
+</li>
+<li>
+<p><a href="http://www.fpinjava.com/2014/12/03/Folding-the-Universe-part-I.html">Folding the Universe, part I</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In the two previous articles of this in series, I showed how nearly every problem could be modeled as folds. This does not in any way mean that all solutions should be implemented using folds. Folding a list with a single element might be a good idea when this is a special case of a list with an arbitrary number of elements. On the other hand, using the same implementation to fold lists that never have more than one element makes little sense beside understanding the common parts of two different problems.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_list_persistence_and_element_mutability">List persistence and element mutability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The word "fold" generally refers to some technical manipulation that is applied to a collection. In other words, it mostly describes a computation, rather that the result of this computation. There are other terms that are more or less synonymous, the most often used being "reduction". The concept of reduction is present in the more general concept of "map/reduce". In the previous articles, I showed that "mapping" could be implemented through a fold, which implies that mapping would, in such case, be an operation implying folding. This is not true. Mapping may be implemented using a fold, but it may also be implemented without it, depending of the implementation of the collection.</p>
+</div>
+<div class="paragraph">
+<p>For this discussion, we have to consider collection implementations under a specific criteria: persistence. There are basically two ways to implement collections. The first way is the way Java uses for <code>ArrayList</code>. The list is backed by an array, and you can modify it by adding, removing or replacing array elements. Of course, the implementation take cares of consistency. You can only add elements at some places, typically before the first, after the last or between two elements. You can&#8217;t have "holes" in the array. An when inserting, the implementation take cares of moving the subsequent elements. But this is an implementation detail, as is the fact that when the array is full, the implementation takes care of copying the elements in a larger array in order to allow adding more elements.</p>
+</div>
+<div class="paragraph">
+<p>Such an implementation has many benefits, the main one being that it is fast, allowing constant time access to any element by its index. It also has a number of drawbacks. When growing beside the size of the original array, copying the elements to a new larger one will take additional time. Replacing an element with a new one is possible, which is a benefit, but this is generally incompatible with some access techniques. This makes this kind of collection good to store mutable elements, that can be modified in place, but makes it difficult to use with immutable elements since such elements may not be mutated and have to be replaced by a new ones. To understand the problem, think about a <code>List&lt;String&gt;</code> of names that you want to switch to upper case. You can&#8217;t do the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;String&gt; names = new ArrayList&lt;&gt;(Arrays.asList("Mickey", "Donald", "Pluto"));
+for(String name : names) {
+  name.toUpperCase();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This does not work because <code>String</code> is immutable, so the <code>toUpperCase</code> method does not change a string in any way, but it returns a new string with the modification applied. This wont&#8217;t work neither because we are updating the <code>name</code> variable, and not the list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;String&gt; names = new ArrayList&lt;&gt;(Arrays.asList("mickey", "donald", "pluto"));
+for(String name : names) {
+  name = name.toUpperCase();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Whether immutable objects are better or worse than mutable one is a different problem. What appears here is that immutable objects does not fit well with mutable lists. This is a marginal problem since Java objects are more than often implemented with mutable properties. Let&#8217;s say we have defined a <code>Name</code> class such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class Name {
+  String value;
+
+  public Name(String value) {
+    this.value = value;
+  }
+
+  public void toUpperCase() {
+    value = value.toUpperCase();
+  }
+
+  public String toString() {
+    return value;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With such a class, using Java lists makes more sense:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Name&gt; names = new ArrayList&lt;&gt;(Arrays.asList(new Name("mickey"), new Name("donald"), new Name("pluto")));
+for(Name name : names) {
+  name.toUpperCase();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since Java 8, this even makes more sense since you can write:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Name&gt; names = new ArrayList&lt;&gt;(Arrays.asList(new Name("mickey"), new Name("donald"), new Name("pluto")));
+names.forEach(Name::toUpperCase);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But with immutable objects like strings, we have to resort to folding, or reduction, to achieve the same goal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;String&gt; names = new ArrayList&lt;&gt;(Arrays.asList("mickey", "donald", "pluto"));
+List&lt;String&gt; namesUpper = new ArrayList&lt;&gt;();
+for(String name : names) {
+  namesUpper.add(name.toUpperCase());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(Yes, I know that there are much better ways to solve this problem. This is just for demonstration.)</p>
+</div>
+<div class="paragraph">
+<p>Of course, we would want to abstract this into a specific method that we could put in a library:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  List&lt;String&gt; names = new ArrayList&lt;&gt;(Arrays.asList("mickey", "donald", "pluto"));
+  List&lt;String&gt; namesUpper = reduce(names, String::toUpperCase);
+
+...
+
+private static List&lt;String&gt; reduce(List&lt;String&gt; names, UnaryOperator&lt;String&gt; operator) {
+  List&lt;String&gt; namesUpper = new ArrayList&lt;&gt;();
+  for(String name : names) {
+    namesUpper.add(name.toUpperCase());
+  }
+  return namesUpper;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And we would also want to make this method generic, so that it could be used with any type and any operation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">private static &lt;A, B&gt; List&lt;B&gt; reduce(List&lt;A&gt; as, Function&lt;A, B&gt; f) {
+  List&lt;B&gt; bs = new ArrayList&lt;&gt;();
+  for(A a : as) {
+    bs.add(f.apply(a));
+  }
+  return bs;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the method is called <code>reduce</code> because it reduces a collection of values to a single value. The fact that this single value happens to be a list is misleading, reduction to collections are generally not called reduction, and this is why "fold" is probably a better name.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reduction_of_fold">Reduction of fold ?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Another common difference between what people call "reduction" and "fold" is the way the "empty" case is treated. Here, if the 'List&lt;A&gt;' to fold is empty, we return an empty 'List&lt;B&gt;'. This shows the limits of this approach. The value to return in case of an empty argument list is known only because the return type is known. We can imagine that this special value to return in case of an empty argument list of A is a an empty list of B. In the same way, if we were to return the sum of a list of integers, we would guess that the value to return for an empty list would be 0. This is because we know the "identity" element (of "neutral" element) of the operation. But if we want to make our method even more generic, we have to make it accept an additional parameter.</p>
+</div>
+<div class="paragraph">
+<p>We may also remark that we are in fact doing to different things. One is reducing the list to a single  value that happens to be a new list, the other one is converting the elements to upper case. This last operation is in fact what is called a "mapping". So we may make the whole thing fully generic by adding a separate function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  List&lt;String&gt; identity = new ArrayList&lt;&gt;();
+  List&lt;String&gt; namesUpper = mapReduce(names, identity, FoldLibrary::add, String::toUpperCase);
+
+...
+
+private static &lt;A&gt; List&lt;A&gt; add(A a, List&lt;A&gt; list) {
+  list.add(a);
+  return list;
+}
+
+private static &lt;A, B, C&gt; C mapReduce(List&lt;A&gt; as, C identity, BiFunction&lt;B, C, C&gt; accumulator, Function&lt;A, B&gt; mapper) {
+  C result = identity;
+  for(A a : as) {
+    result = accumulator.apply(mapper.apply(a), result);
+  }
+  return result;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course, these methods could have been implemented in the <code>List</code>. But to be exhaustive, we should deal with the fact that Java 'List' is mutable. So we should make a defensive copy of the list before iterating on it, since it could happen that the list be modified by another thread while we are iterating, which would produce an exception. Of course, this copy should be made atomically. But we do not have to worry about this, because all as been done for us in the <code>Stream</code> class.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_folding_or_reducing_with_streams">Folding (or reducing) with streams</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Transforming a <code>List</code> into a <code>Stream</code> is just a matter of calling the <code>stream()</code> method on the list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;String&gt; names = new ArrayList&lt;&gt;(Arrays.asList("mickey", "donald", "pluto"));
+names.stream()...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, looking at the 'Stream' interface, we can see three <code>reduce</code> methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">T reduce(T identity, BinaryOperator&lt;T&gt; accumulator);
+Optional&lt;T&gt; reduce(BinaryOperator&lt;T&gt; accumulator);
+&lt;U&gt; U reduce(U identity, BiFunction&lt;U, ? super T, U&gt; accumulator, BinaryOperator&lt;U&gt; combiner);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which one should we use? None o them. The first one is used to reduce a <code>Stream</code> to a value of the same type than the list elements, for example to sum a list of integers. This method takes the identity for the given operation as its first argument.</p>
+</div>
+<div class="paragraph">
+<p>The second one is use for the same thing when no identity is provided. In such case, the first element is taken as the starting element (we can&#8217;t call it "identity"). As there might not always be such an element (if the list is empty) the method returns an <code>Optional</code> that may contain the result or be empty.</p>
+</div>
+<div class="paragraph">
+<p>The third method is used to reduce the list to a single value of a different type than the elements type. It takes an <code>identity</code> argument and a <code>BiFunction</code> accumulator, as in our example but no mapper, but a combiner. The absence of a mapper means that we will have to separately <code>map</code> the list prior to reducing, which is not a big deal. The combiner is used when the stream is processed in parallel. In such a case, it is broken in sub streams that are reduced in parallel, producing a number of partial results that must then be combined, hence the need for a combiner. As we will not process the stream in parallel, we don&#8217;t need the combiner, so we may pass whatever we want as the last parameter, provided that it compiles. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;String&gt; identity = new ArrayList&lt;&gt;();
+List&lt;String&gt; namesUpper2 = names.stream().map(String::toUpperCase).reduce(identity, FoldLibrary::add, FoldLibrary::combine);
+
+...
+
+private static &lt;U&gt; List&lt;U&gt; combine(List&lt;U&gt; list1, List&lt;U&gt; list2) {
+  list1.addAll(list2);
+  return list1;
+}
+
+private static &lt;A&gt; List&lt;A&gt; add(List&lt;A&gt; list, A a) {
+  list.add(a);
+  return list;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are four important things to note here:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>This is not the way you should reduce a list to a new list. No need to protest, it is just for demo purpose.</p>
+</li>
+<li>
+<p>The <code>add</code> method is not the same as in the previous example. Arguments are in reverse order, so that a method reference may be used.</p>
+</li>
+<li>
+<p>The <code>combine</code> method can do whatever you want, it will not change anything until you activate parallel processing. But the combiner can&#8217;t be <code>null</code>.</p>
+</li>
+<li>
+<p>The <code>identity</code> list may not be shared. This is a very common source of bugs. Remember that Java lists are not persistent. Once the <code>identity</code> list will have been used, it will contain the result of the reduction!</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_collectors">Using collectors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As I said previously, this is not the way to reduce a list to a new list. For this, we are supposed to use a <code>Collector</code>. Java 8 contains a <code>Collectors</code> (note the terminal "s") class that contains factory methods returning various <code>Collector</code> instances. But we will first look at the more general way. In our example, here is how we would use a collector:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;String&gt; names = new ArrayList&lt;&gt;(Arrays.asList("mickey", "donald", "pluto"));
+List&lt;String&gt; namesUpper3 = names.stream().map(String::toUpperCase).collect(collector);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here <code>collector</code> is an instance of a class implementing the <code>Collector</code> interface. If you use an IDE, you may simply declare an anonymous class and let the IDE provide the method stubs for you. You must however provide the type parameters. A <code>Collector</code> takes three type parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The first one is the type of the stream elements (in our case, <code>String</code>)</p>
+</li>
+<li>
+<p>The third one is the expected type of the reduced value (in our case <code>List&lt;String&gt;</code>)</p>
+</li>
+<li>
+<p>The second is an intermediate type that would be necessary in case we would first have to reduce to this type before transforming the result into the expected type. If you have trouble to understand what this mean, maybe the official documentation can help. It states that this type is <em>the mutable accumulation type of the reduction operation (often hidden as an implementation detail)</em>. If this is not clearer, don&#8217;t be afraid. We will see an example soon. For the time being, consider that it is the same type as the expected result type, thus <code>List&lt;String&gt;</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Now you can declare an anonymous class implementing the <code>Collector</code> interface and let the IDE provide empty implementations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Collector&lt;String, List&lt;String&gt;, List&lt;String&gt;&gt; collector = new Collector&lt;String, List&lt;String&gt;, List&lt;String&gt;&gt;() {
+  @Override
+  public Supplier&lt;List&lt;String&gt;&gt; supplier() {
+    return null;
+  }
+
+  @Override
+  public BiConsumer&lt;List&lt;String&gt;, String&gt; accumulator() {
+    return null;
+  }
+
+  @Override
+  public BinaryOperator&lt;List&lt;String&gt;&gt; combiner() {
+    return null;
+  }
+
+  @Override
+  public Function&lt;List&lt;String&gt;, List&lt;String&gt;&gt; finisher() {
+    return null;
+  }
+
+  @Override
+  public Set&lt;Characteristics&gt; characteristics() {
+    return null;
+  }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>supplier</code> method is used to provide the identity element, so the implementation is obvious:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public Supplier&lt;List&lt;String&gt;&gt; supplier() {
+  return ArrayList::new;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>accumulator</code> methods is the main difference between the use of a <code>Collector</code> and the <code>reduce</code> method. In the <code>reduce</code> method, the accumulator was a <code>BiFunction</code> which forced us to create a functional method for adding an element to a list (returning the modified list). The <code>Collector</code> interface uses a <code>BiConsumer</code>, allowing direct use of the <code>List.add</code> method:</p>
+</div>
+<div class="paragraph">
+<p>and <code>combiner</code> methods have the same role as in our previous example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public BiConsumer&lt;List&lt;String&gt;, String&gt; accumulator() {
+  return List::add;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that using our previous <code>Library.add</code> method would work too, since this was simply a wrapper around a list mutation. Our <code>BiFunction</code> had a side effect, and this side effect would allow us using it here. Although the method is supposed to return a <code>BiConsumer</code>, a <code>BiFunction</code> is ok as long as we do not specify the type explicitly. This can be the source of very nasty bugs, because one will rarely search for bugs in a program that is actually working as expected!</p>
+</div>
+<div class="paragraph">
+<p>The combiner is identical to what we used for the <code>reduce</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public BinaryOperator&lt;List&lt;String&gt;&gt; combiner() {
+  return FoldLibrary::combine;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>One important difference (not visible here) is that the parameter type of the <code>BinaryOperator</code> returned by the <code>combine</code> method, as well as the first parameter type of the <code>BiConsumer</code> returned by the <code>accumulator</code> method, are not the expected result type but the <em>the mutable accumulation type of the reduction</em>, meaning an intermediate type that could be used to simplify the implementation (or make it more efficient). For example, we could work on arrays of <code>String</code> and eventually transform the result into a <code>List&lt;String&gt;</code>. In such a case, this ultimate transformation would be made by the <code>finisher</code> method. The <code>finisher</code> method may also be used to "decorate" the result (we will see an example soon). For now, the implementation does nothing beside returning its argument:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public Function&lt;List&lt;String&gt;, List&lt;String&gt;&gt; finisher() {
+   return Function.identity();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that we are talking of the implementation of the function returned by the <code>finisher</code> method, not the method itself. A function returning its argument unchanged could be written as a lambda: <code>a &#8594; a</code>, but it is cleaner to use the one returned by the <code>Function.identity()</code> method (which by the way uses a lambda for its implementation).</p>
+</div>
+<div class="paragraph">
+<p>The last method is meant to provide additional information about the reduction. <code>Characteristic</code> is an enum with three possible values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CONCURRENT</code> indicates that the reduction can be done in parallel (meaning that the <code>combiner</code> method would be used to assemble the partial results.</p>
+</li>
+<li>
+<p><code>UNORDERED</code> indicates that the order of the element is meaningless regarding the reduction. This, for example, would be true for the sum of a list of integers, but not for our example where the order of the strings should be preserved.</p>
+</li>
+<li>
+<p><code>IDENTITY_FINISH</code> means that the <code>finisher</code> methods returns the <code>identity</code> function and thus can be ignored. If this value is selected, the finisher function will not be called and the result will simply be casted to the expected result type. In such case, the <code>finisher</code> function may be made to return <code>null</code>, although it is certainly not a good idea.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In our case, we only need to return the <code>IDENTITY_FINISH</code> value, which should be done as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public Set&lt;Characteristics&gt; characteristics() {
+  return Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>EnumSet.of</code> method takes a vararg argument, so you can add the other enum values as necessary, in a comma separated list.</p>
+</div>
+<div class="paragraph">
+<p>As you can see, the two methods used to reduce (or fold) a list to a new list are pretty equivalent, beside the fact that the <code>Collector</code> leverage the fact that java lists are not persistent and use "in place" modification.</p>
+</div>
+<div class="paragraph">
+<p>Also note that unlike folds that we saw in the two previous articles, you have no choice here about doing the operation from right to left. Java 8 reduction is at best equivalent to a left fold (if the <code>UNORDERED</code> characteristic is not selected).</p>
+</div>
+<div class="paragraph">
+<p>Folding a list into a new list is so common that Java 8 provides a factory method returning the necessary collector:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;String&gt; namesUpper = names.stream().map(String::toUpperCase).collect(Collectors.toList());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Does this mean that it is useless to know how collectors work? Not at all. Here is an example of folding the same list of strings into a comma separated list included between brackets. Once again, this might not be the simplest way to "join" a list of elements, and is only for demonstration purpose:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Collector&lt;Integer, StringBuilder, String&gt; stringCollector = new Collector&lt;Integer, StringBuilder, String&gt;() {
+  @Override
+  public Supplier&lt;StringBuilder&gt; supplier() {
+    return StringBuilder::new;
+  }
+
+  @Override
+  public BiConsumer&lt;StringBuilder, Integer&gt; accumulator() {
+    return (sb, i) -&gt; sb.append(sb.length() == 0 ? "" : ", ").append(i);
+  }
+
+  @Override
+  public BinaryOperator&lt;StringBuilder&gt; combiner() {
+    return StringBuilder::append;
+  }
+
+  @Override
+  public Function&lt;StringBuilder, String&gt; finisher() {
+    return sb -&gt; sb.insert(0, '[').append(']').toString();
+  }
+
+  @Override
+  public Set&lt;Characteristics&gt; characteristics() {
+    return Collections.emptySet();
+  }
+};
+
+List&lt;Integer&gt; list = Arrays.asList(1, 2, 3, 4, 5, 6);
+System.out.println(list.stream().collect(stringCollector));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This prints:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">[1, 2, 3, 4, 5, 6]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course, you will want to push abstraction a bit farther. Creating such delimited strings from a list can be parameterized by the the prefix, the separator and the postfix. This can be obtained by creating a factory method for the comparator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    List&lt;Integer&gt; list = Arrays.asList(1, 2, 3, 4, 5, 6);
+    System.out.println(list.stream().collect(toDelimitedString("[", ", ", "]")));
+
+public static &lt;T&gt; Collector&lt;T, StringBuilder, String&gt; toDelimitedString(String prefix, String separator, String postFix) {
+  return new Collector&lt;T, StringBuilder, String&gt;() {
+    @Override
+    public Supplier&lt;StringBuilder&gt; supplier() {
+      return StringBuilder::new;
+    }
+
+    @Override
+    public BiConsumer&lt;StringBuilder, T&gt; accumulator() {
+      return (sb, i) -&gt; sb.append(sb.length() == 0 ? "" : separator).append(i);
+    }
+
+    @Override
+    public BinaryOperator&lt;StringBuilder&gt; combiner() {
+      return StringBuilder::append;
+    }
+
+    @Override
+    public Function&lt;StringBuilder, String&gt; finisher() {
+      return sb -&gt; sb.insert(0, prefix).append(postFix).toString();
+    }
+
+    @Override
+    public Set&lt;Characteristics&gt; characteristics() {
+      return Collections.emptySet();
+    }
+  };
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_map_to_perform_map_reduce_with_a_reducing_collector">Adding map to perform map/reduce with a reducing collector</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>But "collecting", as Java 8 calls folding and reducing, is generally not used alone, but associated with a map operation (map/reduce). If we where to add tax and format the result with a currency before reducing them to a delimited string, we could write:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">list.stream().map(TaxComputer::addTax).map(Formatter::addCurrency).collect(toDelimitedString("[", ", ", "]"))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Any combination of <code>map</code> may be replaced with a single one using function composition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Integer&gt; list = Arrays.asList(1, 2, 3, 4, 5, 6);
+Function&lt;Integer, Double&gt; addTax = TaxComputer::addTax;
+Function&lt;Double, String&gt; format = Formatter::format;
+System.out.println(list.stream().map(format.compose(addTax)).collect(toDelimitedString("[", ", ", "]")));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course, you can also compose the methods and use a method reference for the mapping. One you have a single mapping, you can do a map/reduce using one of the reducing collectors provided byt the <code>Collector</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public static &lt;T&gt; Collector&lt;T, ?, T&gt; reducing(T identity, BinaryOperator&lt;T&gt; op)
+public static &lt;T&gt; Collector&lt;T, ?, Optional&lt;T&gt;&gt; reducing(BinaryOperator&lt;T&gt; op)
+public static &lt;T, U&gt; Collector&lt;T, ?, U&gt; reducing(U identity, Function&lt;? super T, ? extends U&gt; mapper, BinaryOperator&lt;U&gt; op)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The third one is what we need:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">list.stream().collect(Collectors.reducing("", format.compose(addTax), (String a, String b) -&gt; a + (a.length() == 0 ? "" : ", ") + b));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>but the absence of a <code>finisher</code> method makes it more difficult to add a prefix and a postfix. This can however be done the following way, although it is quite dirty:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">list.stream().collect(Collectors.reducing("[", format.compose(addTax), (String a, String b) -&gt; a + (a.length() == 1 ? "" : ", ") + b)) + "]";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that we do not test the length of the string for 0 to know whether we must add a delimiter, but for 1, which is actually the length of the first delimiter. A cleaner version would be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">String startDelimiter = "[";
+String endDelimiter = "]";
+Strign result = list.stream().collect(Collectors.reducing(startDelimiter, format.compose(addTax), (String a, String b) -&gt; a + (startDelimiter.equals(a) ? "" : ", ") + b)) + endDelimiter;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have seen most of the techniques provided by Java 8 to program fold/reduce operation combined with map. So what is the best one? It is difficult to answer this question. Of course, it would seem natural to use the standard Java 8 tools. But this tools are awkward because they are meant to adapt functional techniques that are supposed to be used with persistent data structures to Java 8 data structures that are not persistent. A specific example of this is the use of a <code>BiConsumer</code> instead of a <code>BiFunction</code> for collectors, and the fact that inadvertently using a <code>BiFunction</code> instead of a <code>BiConsumer</code> could still work if this function has the same side effect as the effect of the expected <code>BiConsumer</code>. The alternative is to use a functional data structure instead of a Java <code>List</code> as we saw in the two previous articles of this series. But how do this compare to the Java 8 <code>Collector</code> way in terms of performance? This is what we will see in the next article.</p>
+</div>
+<div class="paragraph">
+<p>Remember that this article is a complement to my book <a href="https://www.manning.com/books/functional-programming-in-java">Functional Programming in Java</a>. Do not hesitate to have a look at it if you are interested by applying functional programming techniques to Java programs.</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+  
+  <section class="post-comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'fpinjava'; // required: replace example with your forum shortname
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </section>
+  
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2016. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//pysaumont.github.io/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+
+</body>
+</html>
