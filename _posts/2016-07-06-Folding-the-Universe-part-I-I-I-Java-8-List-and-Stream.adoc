@@ -1,7 +1,7 @@
 = Folding the Universe, part III : Java 8 List and Stream
 :published_at: 2016-07-06
 
-This is the third article in a series about using functional programming techniques like folds to Java programs. This series is a complement to my book https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java] published by Manning.
+This is the third article in a series about applying functional programming techniques like _folding_ to Java programs. This series is a complement to my book https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java] published by Manning.
 
 First two articles are available here:
 
