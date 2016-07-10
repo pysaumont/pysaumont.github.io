@@ -97,9 +97,7 @@ Of course, we would want to abstract this into a specific method that we could p
 
 [source,java]
 ----
-  List<String> names = new ArrayList<>(Arrays.asList("mickey", 
-                                                     "donald", 
-                                                     "pluto"));
+  List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"));
   List<String> namesUpper = reduce(names, String::toUpperCase);
 
 ...
