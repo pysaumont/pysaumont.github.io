@@ -9,7 +9,7 @@ First two articles are available here:
 
 - https://pysaumont.github.io/2016/06/21/Folding-the-Universe-part-I-I-Abstracting-recursion.html[Folding the Universe, part II: Abstracting Recursion]
 
-In the two previous articles of this in series, I showed how nearly every problem could be modeled as folds. This does not in any way mean that all solutions should be implemented using folds. Folding a list with a single element might be a good idea when this is a special case of a list with an arbitrary number of elements. On the other hand, using the same implementation to fold lists that never have more than one element makes little sense beside understanding the common parts of two different problems.
+In the two previous articles of this in series, I showed how nearly every problem could be modeled as folds. This does not in any way mean that solutions to all problems should be implemented using folds. Folding a list with a single element might be a good idea when this is a special case of a list that could have an arbitrary number of elements. On the other hand, using the same implementation to fold lists that never have more than one element makes little sense beside understanding the common parts of two different problems.
 
 == List persistence and element mutability
 
