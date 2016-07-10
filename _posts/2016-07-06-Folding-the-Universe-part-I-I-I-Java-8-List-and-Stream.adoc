@@ -27,7 +27,7 @@ for(String name : names) {
 }
 ----
 
-This does not work because `String` is immutable, so the `toUpperCase` method does not change a string in any way, but it returns a new string with the modification applied. This wont't work neither because we are updating the `name` variable, and not the list:
+This does not work because `String` is immutable, so the `toUpperCase` method does not change a string in any way, but it returns a new string with the modification applied. The following won't work neither because we are updating the `name` variable, and not the list:
 
 [source,java]
 ----
@@ -37,19 +37,24 @@ for(String name : names) {
 }
 ----
 
-Whether immutable objects are better or worse than mutable one is a different problem. What appears here is that immutable objects does not fit well with mutable lists. This is a marginal problem since Java objects are more than often implemented with mutable properties. Let's say we have defined a `Name` class such as:
+Whether immutable objects are better or worse than mutable ones is a different debate. What appears here is that immutable objects does not fit well with mutable lists. This is a marginal problem since Java objects are more than often implemented with mutable properties. Let's say we have defined a `Name` class such as:
 
 [source,java]
 ----
 public class Name {
-  String value;
+
+  private String value;
 
   public Name(String value) {
     this.value = value;
   }
 
-  public void toUpperCase() {
-    value = value.toUpperCase();
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
   }
 
   public String toString() {
