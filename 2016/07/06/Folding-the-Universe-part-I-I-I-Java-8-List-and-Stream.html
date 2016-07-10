@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-10T18:48:12.165Z" />
+    <meta property="article:modified_time" content="2016-07-10T20:04:42.622Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-10T18:48:12.165Z",
+    "dateModified": "2016-07-10T20:04:42.622Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -234,7 +234,9 @@ for(String name : names) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Name&gt; names = new ArrayList&lt;&gt;(Arrays.asList(new Name("mickey"), new Name("donald"), new Name("pluto")));
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Name&gt; names = new ArrayList&lt;&gt;(Arrays.asList(new Name("mickey"),
+                                                 new Name("donald"),
+                                                 new Name("pluto")));
 for(Name name : names) {
   name.toUpperCase();
 }</code></pre>
@@ -245,7 +247,9 @@ for(Name name : names) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Name&gt; names = new ArrayList&lt;&gt;(Arrays.asList(new Name("mickey"), new Name("donald"), new Name("pluto")));
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Name&gt; names = new ArrayList&lt;&gt;(Arrays.asList(new Name("mickey"),
+                                                 new Name("donald"),
+                                                 new Name("pluto")));
 names.forEach(Name::toUpperCase);</code></pre>
 </div>
 </div>
@@ -269,12 +273,14 @@ for(String name : names) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">  List&lt;String&gt; names = new ArrayList&lt;&gt;(Arrays.asList("mickey", "donald", "pluto"));
+<pre class="highlight"><code class="language-java" data-lang="java">  List&lt;String&gt; names = new ArrayList&lt;&gt;(Arrays.asList("mickey",
+                                                     "donald",
+                                                     "pluto"));
   List&lt;String&gt; namesUpper = reduce(names, String::toUpperCase);
 
 ...
 
-private static List&lt;String&gt; reduce(List&lt;String&gt; names, UnaryOperator&lt;String&gt; operator) {
+static List&lt;String&gt; reduce(List&lt;String&gt; names, UnaryOperator&lt;String&gt; operator) {
   List&lt;String&gt; namesUpper = new ArrayList&lt;&gt;();
   for(String name : names) {
     namesUpper.add(name.toUpperCase());
@@ -288,7 +294,7 @@ private static List&lt;String&gt; reduce(List&lt;String&gt; names, UnaryOperator
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">private static &lt;A, B&gt; List&lt;B&gt; reduce(List&lt;A&gt; as, Function&lt;A, B&gt; f) {
+<pre class="highlight"><code class="language-java" data-lang="java">static &lt;A, B&gt; List&lt;B&gt; reduce(List&lt;A&gt; as, Function&lt;A, B&gt; f) {
   List&lt;B&gt; bs = new ArrayList&lt;&gt;();
   for(A a : as) {
     bs.add(f.apply(a));
