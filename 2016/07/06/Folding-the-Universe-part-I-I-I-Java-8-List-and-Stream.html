@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-10T17:11:58.081Z" />
+    <meta property="article:modified_time" content="2016-07-10T18:34:41.397Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-10T17:11:58.081Z",
+    "dateModified": "2016-07-10T18:34:41.397Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -180,13 +180,13 @@
 <h2 id="_list_persistence_and_element_mutability">List persistence and element mutability</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The word "fold" generally refers to some technical manipulation that is applied to a collection. In other words, it mostly describes a computation, rather that the result of this computation. There are other terms that are more or less synonymous, the most often used being "reduction". The concept of reduction is present in the more general concept of "map/reduce". In the previous articles, I showed that "mapping" could be implemented through a fold, which implies that mapping would, in such case, be an operation implying folding. This is not true. Mapping may be implemented using a fold, but it may also be implemented without it, depending of the implementation of the collection.</p>
+<p>The word "fold" generally refers to some technical manipulation that is applied to a collection. In other words, it mostly describes a computation, rather than the result of this computation. There are other terms that are more or less synonymous, the most often used being "reduction". The concept of reduction is present in the more general concept of "map/reduce". In the previous articles, I showed that "mapping" could be implemented through a fold, which implies that mapping would, in such case, be an operation implying folding. This is not true. Mapping may be implemented using a fold, but it may also be implemented without it, depending of the implementation of the collection.</p>
 </div>
 <div class="paragraph">
-<p>For this discussion, we have to consider collection implementations under a specific criteria: persistence. There are basically two ways to implement collections. The first way is the way Java uses for <code>ArrayList</code>. The list is backed by an array, and you can modify it by adding, removing or replacing array elements. Of course, the implementation take cares of consistency. You can only add elements at some places, typically before the first, after the last or between two elements. You can&#8217;t have "holes" in the array. An when inserting, the implementation take cares of moving the subsequent elements. But this is an implementation detail, as is the fact that when the array is full, the implementation takes care of copying the elements in a larger array in order to allow adding more elements.</p>
+<p>For this discussion, we have to consider collection implementations under a specific criteria: persistence. There are basically two ways to implement collections. The first way is the way Java uses for <code>ArrayList</code>. The list is backed by an array, and you can modify it by adding, removing or replacing array elements. Of course, the implementation take cares of consistency. You can only add elements at some places, typically before the first, after the last or between two elements. You generally can&#8217;t have "holes" in the array. And when inserting, the implementation takes care of moving the subsequent elements. But this is an implementation detail, as is the fact that when the array is full, the implementation will copy the elements in a larger array in order to allow adding more elements.</p>
 </div>
 <div class="paragraph">
-<p>Such an implementation has many benefits, the main one being that it is fast, allowing constant time access to any element by its index. It also has a number of drawbacks. When growing beside the size of the original array, copying the elements to a new larger one will take additional time. Replacing an element with a new one is possible, which is a benefit, but this is generally incompatible with some access techniques. This makes this kind of collection good to store mutable elements, that can be modified in place, but makes it difficult to use with immutable elements since such elements may not be mutated and have to be replaced by a new ones. To understand the problem, think about a <code>List&lt;String&gt;</code> of names that you want to switch to upper case. You can&#8217;t do the following:</p>
+<p>Such an implementation has many benefits, the main one being that it is fast, allowing constant time access to any element by its index. It also has a number of drawbacks. When growing beside the size of the original array, copying the elements to a new larger one takes additional time. Replacing an element with a new one is possible, which is a benefit, but this is generally incompatible with some iteration based access techniques. This makes this kind of collection good for storing mutable elements, that can be modified in place, but makes it difficult to use with immutable elements since such elements may not be mutated and have to be replaced by a new ones. To understand the problem, think about a <code>List&lt;String&gt;</code> of names that you want to switch to upper case. You can&#8217;t do the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
