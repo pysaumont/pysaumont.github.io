@@ -1,5 +1,5 @@
 = Folding the Universe, part III : Java 8 List and Stream
-:published_at: 2016-06-07
+:published_at: 2016-07-06
 
 This is the third article in a series about using functional programming techniques like folds to Java programs. This series is a complement to my book https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java] published by Manning.
 
