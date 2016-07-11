@@ -327,7 +327,7 @@ As you can see, the two methods used to reduce (or fold) a list to a new list ar
 
 Also note that unlike the folds that we saw in the two previous articles, you have no choice here about doing the operation from left to right or from right to left. Java 8 reduction is at best equivalent to a left fold (if the `UNORDERED` characteristic is not selected).
 
-== The standard toList collector
+=== The standard toList collector
 
 Folding a list into a new list is so common that Java 8 provides a factory method returning the necessary collector:
 
