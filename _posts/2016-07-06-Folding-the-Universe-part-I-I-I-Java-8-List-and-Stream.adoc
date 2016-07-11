@@ -60,7 +60,7 @@ public class Name {
 
 (OK, his class makes little sense, but it is just meant to be an example of a mutable object.)
 
-With such a class, using Java lists makes more sense:
+With such a class, using Java lists is straightforward:
 
 [source,java]
 ----
