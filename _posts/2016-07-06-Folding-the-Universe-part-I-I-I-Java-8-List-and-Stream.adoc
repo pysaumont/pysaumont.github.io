@@ -216,7 +216,7 @@ There are four important things to note here:
 
 == Using collectors
 
-As I said previously, this is not the way to reduce a list to a new list. For this, we are supposed to use a `Collector`. Java 8 contains a `Collectors` (note the terminal "s") class that contains factory methods returning various `Collector` instances. But we will first look at the more general way. In our example, here is how we would use a collector:
+As I said previously, this is not the best way to reduce a list to a new list. For this, we are supposed to use a `Collector`. Java 8 contains a `Collectors` (note the terminal "s") class that contains factory methods returning various `Collector` instances. But we will first look at the most general way. In our example, here is how we would use a collector:
 
 [source,java]
 ----
@@ -224,7 +224,7 @@ List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"))
 List<String> namesUpper3 = names.stream().map(String::toUpperCase).collect(collector);
 ----
 
-Here `collector` is an instance of a class implementing the `Collector` interface. If you use an IDE, you may simply declare an anonymous class and let the IDE provide the method stubs for you. You must however provide the type parameters. A `Collector` takes three type parameters:
+Here, `collector` is an instance of a class implementing the `Collector` interface. If you use an IDE, you may simply declare an anonymous class and let the IDE create the method stubs for you. You must however provide the type parameters. A `Collector` takes three type parameters:
 
 - The first one is the type of the stream elements (in our case, `String`)
 
