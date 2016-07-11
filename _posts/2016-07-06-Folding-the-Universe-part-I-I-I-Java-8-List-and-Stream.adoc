@@ -273,9 +273,7 @@ public Supplier<List<String>> supplier() {
 }
 ----
 
-The `accumulator` methods is the main difference between the use of a `Collector` and the `reduce` method. In the `reduce` method, the accumulator was a `BiFunction` which forced us to create a functional method for adding an element to a list (returning the modified list). The `Collector` interface uses a `BiConsumer`, allowing direct use of the `List.add` method:
-
-and `combiner` methods have the same role as in our previous example:
+The `accumulator` method is the main difference between the use of a `Collector` and the `reduce` method. In the `reduce` method, the accumulator was a `BiFunction` which forced us to create a functional method for adding an element to a list (returning the modified list). The `Collector` interface uses a `BiConsumer`, allowing direct use of the `List.add` method:
 
 [source,java]
 ----
