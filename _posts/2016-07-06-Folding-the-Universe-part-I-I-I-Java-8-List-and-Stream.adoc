@@ -415,7 +415,7 @@ public static <T> Collector<T, StringBuilder, String> toDelimitedString(String p
 
 == Adding map to perform map/reduce with a reducing collector
 
-But "collecting", as Java 8 calls folding and reducing, is generally not used alone, but associated with a map operation (map/reduce). If we where to add tax and format the result with a currency before reducing them to a delimited string, we could write:
+But "collecting", as Java 8 calls folding and reducing, is generally not used alone, but associated with a map operation (map/reduce). If we where to add tax to prices and format the result with a currency before reducing them to a delimited string, we could write:
 
 [source,java]
 ----
@@ -432,12 +432,16 @@ Function<Double, String> format = Formatter::format;
 System.out.println(list.stream().map(format.compose(addTax)).collect(toDelimitedString("[", ", ", "]")));
 ----
 
-Of course, you can also compose the methods and use a method reference for the mapping. One you have a single mapping, you can do a map/reduce using one of the reducing collectors provided byt the `Collector` class:
+(Please not that there is no benefits in terms of performance, since several map operations on a stream will only cause one iteration.)
+
+Of course, you can also compose the methods and use a method reference for the mapping. One you have a single mapping, you can do a map/reduce using one of the reducing collectors provided by the `Collector` class:
 
 [source,java]
 ----
 public static <T> Collector<T, ?, T> reducing(T identity, BinaryOperator<T> op)
+
 public static <T> Collector<T, ?, Optional<T>> reducing(BinaryOperator<T> op)
+
 public static <T, U> Collector<T, ?, U> reducing(U identity, Function<? super T, ? extends U> mapper, BinaryOperator<U> op)
 ----
 
