@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-11T09:27:37.951Z" />
+    <meta property="article:modified_time" content="2016-07-11T12:12:08.516Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-11T09:27:37.951Z",
+    "dateModified": "2016-07-11T12:12:08.516Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -535,7 +535,7 @@ List&lt;String&gt; namesUpper3 = names.stream().map(String::toUpperCase).collect
 <p><code>CONCURRENT</code> indicates that the reduction can be done in parallel (meaning that the <code>combiner</code> method would be used to assemble the partial results.</p>
 </li>
 <li>
-<p><code>UNORDERED</code> indicates that the order of the element is meaningless regarding the reduction. This, for example, would be true for the sum of a list of integers, but not for our example where the order of the strings should be preserved.</p>
+<p><code>UNORDERED</code> indicates that the order of the elements is meaningless regarding the reduction. This, for example, would be true for the sum of a list of integers, but not for our example where the order of the strings should be preserved.</p>
 </li>
 <li>
 <p><code>IDENTITY_FINISH</code> means that the <code>finisher</code> methods returns the <code>identity</code> function and thus can be ignored. If this value is selected, the finisher function will not be called and the result will simply be casted to the expected result type. In such case, the <code>finisher</code> function may be made to return <code>null</code>, although it is certainly not a good idea.</p>
