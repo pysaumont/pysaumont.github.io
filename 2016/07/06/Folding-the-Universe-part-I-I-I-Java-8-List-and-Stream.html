@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-11T09:21:55.308Z" />
+    <meta property="article:modified_time" content="2016-07-11T09:24:31.815Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-11T09:21:55.308Z",
+    "dateModified": "2016-07-11T09:24:31.815Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -423,7 +423,7 @@ private static &lt;A&gt; List&lt;A&gt; add(List&lt;A&gt; list, A a) {
 <h2 id="_using_collectors">Using collectors</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As I said previously, this is not the way to reduce a list to a new list. For this, we are supposed to use a <code>Collector</code>. Java 8 contains a <code>Collectors</code> (note the terminal "s") class that contains factory methods returning various <code>Collector</code> instances. But we will first look at the more general way. In our example, here is how we would use a collector:</p>
+<p>As I said previously, this is not the best way to reduce a list to a new list. For this, we are supposed to use a <code>Collector</code>. Java 8 contains a <code>Collectors</code> (note the terminal "s") class that contains factory methods returning various <code>Collector</code> instances. But we will first look at the most general way. In our example, here is how we would use a collector:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -432,7 +432,7 @@ List&lt;String&gt; namesUpper3 = names.stream().map(String::toUpperCase).collect
 </div>
 </div>
 <div class="paragraph">
-<p>Here <code>collector</code> is an instance of a class implementing the <code>Collector</code> interface. If you use an IDE, you may simply declare an anonymous class and let the IDE provide the method stubs for you. You must however provide the type parameters. A <code>Collector</code> takes three type parameters:</p>
+<p>Here, <code>collector</code> is an instance of a class implementing the <code>Collector</code> interface. If you use an IDE, you may simply declare an anonymous class and let the IDE create the method stubs for you. You must however provide the type parameters. A <code>Collector</code> takes three type parameters:</p>
 </div>
 <div class="ulist">
 <ul>
