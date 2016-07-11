@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-11T12:16:49.785Z" />
+    <meta property="article:modified_time" content="2016-07-11T12:19:16.530Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-11T12:16:49.785Z",
+    "dateModified": "2016-07-11T12:19:16.530Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -561,8 +561,6 @@ List&lt;String&gt; namesUpper3 = names.stream().map(String::toUpperCase).collect
 <div class="paragraph">
 <p>Also note that unlike the folds that we saw in the two previous articles, you have no choice here about doing the operation from left to right or from right to left. Java 8 reduction is at best equivalent to a left fold (if the <code>UNORDERED</code> characteristic is not selected).</p>
 </div>
-<div class="sect2">
-<h3 id="_the_standard_tolist_collector">The standard toList collector</h3>
 <div class="paragraph">
 <p>Folding a list into a new list is so common that Java 8 provides a factory method returning the necessary collector:</p>
 </div>
@@ -616,7 +614,7 @@ System.out.println(list.stream().collect(stringCollector));</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Of course, you will want to push abstraction a bit farther. Creating such delimited strings from a list can be parameterized by the the prefix, the separator and the postfix. This can be obtained by creating a factory method for the comparator:</p>
+<p>Of course, you will want to push abstraction a bit farther. Creating such delimited strings from a list can be parameterized by the prefix, the separator and the postfix. This can be obtained by adding a factory method to create the comparator:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -651,7 +649,6 @@ public static &lt;T&gt; Collector&lt;T, StringBuilder, String&gt; toDelimitedStr
     }
   };
 }</code></pre>
-</div>
 </div>
 </div>
 </div>
