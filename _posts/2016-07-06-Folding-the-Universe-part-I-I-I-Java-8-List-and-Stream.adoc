@@ -308,7 +308,7 @@ The last method is meant to provide additional information about the reduction. 
 
 - `CONCURRENT` indicates that the reduction can be done in parallel (meaning that the `combiner` method would be used to assemble the partial results.
 
-- `UNORDERED` indicates that the order of the element is meaningless regarding the reduction. This, for example, would be true for the sum of a list of integers, but not for our example where the order of the strings should be preserved.
+- `UNORDERED` indicates that the order of the elements is meaningless regarding the reduction. This, for example, would be true for the sum of a list of integers, but not for our example where the order of the strings should be preserved.
 
 - `IDENTITY_FINISH` means that the `finisher` methods returns the `identity` function and thus can be ignored. If this value is selected, the finisher function will not be called and the result will simply be casted to the expected result type. In such case, the `finisher` function may be made to return `null`, although it is certainly not a good idea.
 
