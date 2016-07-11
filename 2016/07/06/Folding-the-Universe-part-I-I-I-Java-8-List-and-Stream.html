@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-11T08:59:35.812Z" />
+    <meta property="article:modified_time" content="2016-07-11T09:14:47.263Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-11T08:59:35.812Z",
+    "dateModified": "2016-07-11T09:14:47.263Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -313,10 +313,10 @@ static List&lt;String&gt; reduce(List&lt;String&gt; names, UnaryOperator&lt;Stri
 <h2 id="_reduction_of_fold">Reduction of fold ?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Another common difference between what people call "reduction" and "fold" is the way the "empty" case is treated. Here, if the 'List&lt;A&gt;' to fold is empty, we return an empty 'List&lt;B&gt;'. This shows the limits of this approach. The value to return in case of an empty argument list is known only because the return type is known. We can imagine that this special value to return in case of an empty argument list of A is a an empty list of B. In the same way, if we were to return the sum of a list of integers, we would guess that the value to return for an empty list would be 0. This is because we know the "identity" element (of "neutral" element) of the operation. But if we want to make our method even more generic, we have to make it accept an additional parameter.</p>
+<p>Another common difference between what people call "reduction" and "fold" is the way the "empty" case is treated. Here, if the <code>List&lt;A&gt;</code> to fold is empty, we return an empty <code>List&lt;B&gt;</code>. This shows the limits of this approach. The value to return in case of an empty argument list is known only because the return type is known. We can imagine that this special value to return in case of an empty argument list of <code>A</code> is a an empty list of <code>B</code>. In the same way, if we were to return the sum of a list of integers, we would guess that the value to return for an empty list would be 0. This is because we know that the "identity" element (of "neutral" element) of the sum operation is 0. So if we want to make our method even more generic, we have to make it accept the identity element as an additional parameter.</p>
 </div>
 <div class="paragraph">
-<p>We may also remark that we are in fact doing to different things. One is reducing the list to a single  value that happens to be a new list, the other one is converting the elements to upper case. This last operation is in fact what is called a "mapping". So we may make the whole thing fully generic by adding a separate function:</p>
+<p>You may also notice that we are in fact doing to different things. One is reducing the list to a single  value that happens to be a new list, the other one is converting the elements to upper case. This last operation is in fact what is called a "mapping". So we may make the whole thing fully generic by adding a separate function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -340,7 +340,10 @@ private static &lt;A, B, C&gt; C mapReduce(List&lt;A&gt; as, C identity, BiFunct
 </div>
 </div>
 <div class="paragraph">
-<p>Of course, these methods could have been implemented in the <code>List</code>. But to be exhaustive, we should deal with the fact that Java 'List' is mutable. So we should make a defensive copy of the list before iterating on it, since it could happen that the list be modified by another thread while we are iterating, which would produce an exception. Of course, this copy should be made atomically. But we do not have to worry about this, because all as been done for us in the <code>Stream</code> class.</p>
+<p>But to be exhaustive, we should deal with the fact that Java <code>List</code> is mutable. So we should make a defensive copy of the list before iterating on it, since it could happen that the list be modified by another thread while we are iterating, which would produce an exception. Of course, this copy should be made atomically.</p>
+</div>
+<div class="paragraph">
+<p>In fact, we do not have to bother with all these details. All have already been made available in the Java 8 <code>Stream</code> class.</p>
 </div>
 </div>
 </div>
