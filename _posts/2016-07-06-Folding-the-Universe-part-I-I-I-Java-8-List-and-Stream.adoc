@@ -452,7 +452,7 @@ The third one is what we need:
 list.stream().collect(Collectors.reducing("", format.compose(addTax), (String a, String b) -> a + (a.length() == 0 ? "" : ", ") + b));
 ----
 
-but the absence of a `finisher` method makes it more difficult to add a prefix and a postfix. This can however be done the following way, although it is quite dirty:
+but the absence of a `finisher` method makes it more difficult to add a prefix and a postfix. This can however be done the following way, although it is not very clean:
 
 [source,java]
 ----
@@ -470,6 +470,6 @@ Strign result = list.stream().collect(Collectors.reducing(startDelimiter, format
 
 == Conclusion
 
-We have seen most of the techniques provided by Java 8 to program fold/reduce operation combined with map. So what is the best one? It is difficult to answer this question. Of course, it would seem natural to use the standard Java 8 tools. But this tools are awkward because they are meant to adapt functional techniques that are supposed to be used with persistent data structures to Java 8 data structures that are not persistent. A specific example of this is the use of a `BiConsumer` instead of a `BiFunction` for collectors, and the fact that inadvertently using a `BiFunction` instead of a `BiConsumer` could still work if this function has the same side effect as the effect of the expected `BiConsumer`. The alternative is to use a functional data structure instead of a Java `List` as we saw in the two previous articles of this series. But how do this compare to the Java 8 `Collector` way in terms of performance? This is what we will see in the next article.
+We have seen most of the techniques provided by Java 8 to program fold/reduce operations combined with map. So what is the best one? It is difficult to answer this question. Of course, it would seem natural to use the standard Java 8 tools. But this tools are awkward because they are meant to adapt functional techniques that are supposed to be used with persistent data structures to Java 8 data structures that are not persistent. A specific example of this is the use of a `BiConsumer` instead of a `BiFunction` for collectors, and the fact that inadvertently using a `BiFunction` instead of a `BiConsumer` could still work if this function has the same side effect as the effect of the expected `BiConsumer`. The alternative is to use a functional data structure instead of a Java `List` as we saw in the two previous articles of this series. But how does this compare to the Java 8 `Collector` way in terms of performance? This is what we will see in the next article.
 
-Remember that this article is a complement to my book https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java]. Do not hesitate to have a look at it if you are interested by applying functional programming techniques to Java programs.
+Remember that this article is a complement to my book https://www.manning.com/books/functional-programming-in-java[Functional Programming in Java]. Have a look at it if you are interested by applying functional programming techniques to Java programs.
