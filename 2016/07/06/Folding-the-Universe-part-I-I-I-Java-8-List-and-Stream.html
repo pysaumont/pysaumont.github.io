@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-11T12:12:08.516Z" />
+    <meta property="article:modified_time" content="2016-07-11T12:16:21.011Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-11T12:12:08.516Z",
+    "dateModified": "2016-07-11T12:16:21.011Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -556,11 +556,16 @@ List&lt;String&gt; namesUpper3 = names.stream().map(String::toUpperCase).collect
 <p>The <code>EnumSet.of</code> method takes a vararg argument, so you can add the other enum values as necessary, in a comma separated list.</p>
 </div>
 <div class="paragraph">
-<p>As you can see, the two methods used to reduce (or fold) a list to a new list are pretty equivalent, beside the fact that the <code>Collector</code> leverage the fact that java lists are not persistent and use "in place" modification.</p>
+<p>As you can see, the two methods used to reduce (or fold) a list to a new list are pretty equivalent, excepted that the <code>Collector</code> leverage the fact that java lists are not persistent and use "in place" modification.</p>
 </div>
 <div class="paragraph">
-<p>Also note that unlike folds that we saw in the two previous articles, you have no choice here about doing the operation from right to left. Java 8 reduction is at best equivalent to a left fold (if the <code>UNORDERED</code> characteristic is not selected).</p>
+<p>Also note that unlike the folds that we saw in the two previous articles, you have no choice here about doing the operation from left to right or from right to left. Java 8 reduction is at best equivalent to a left fold (if the <code>UNORDERED</code> characteristic is not selected).</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_standard_tolist_collector">The standard toList collector</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Folding a list into a new list is so common that Java 8 provides a factory method returning the necessary collector:</p>
 </div>
