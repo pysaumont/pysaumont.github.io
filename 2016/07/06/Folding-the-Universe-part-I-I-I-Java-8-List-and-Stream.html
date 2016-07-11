@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-11T09:14:47.263Z" />
+    <meta property="article:modified_time" content="2016-07-11T09:21:55.308Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-11T09:14:47.263Z",
+    "dateModified": "2016-07-11T09:21:55.308Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -360,23 +360,25 @@ names.stream()...</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then, looking at the 'Stream' interface, we can see three <code>reduce</code> methods:</p>
+<p>Then, looking at the <code>Stream</code> interface, we can see three <code>reduce</code> methods:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">T reduce(T identity, BinaryOperator&lt;T&gt; accumulator);
+
 Optional&lt;T&gt; reduce(BinaryOperator&lt;T&gt; accumulator);
+
 &lt;U&gt; U reduce(U identity, BiFunction&lt;U, ? super T, U&gt; accumulator, BinaryOperator&lt;U&gt; combiner);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Which one should we use? None o them. The first one is used to reduce a <code>Stream</code> to a value of the same type than the list elements, for example to sum a list of integers. This method takes the identity for the given operation as its first argument.</p>
+<p>Which one should we use? None of them. The first one is used to reduce a <code>Stream</code> to a value of the same type as its elements, for example to sum a list of integers. This method takes the identity for the given operation as its first argument.</p>
 </div>
 <div class="paragraph">
-<p>The second one is use for the same thing when no identity is provided. In such case, the first element is taken as the starting element (we can&#8217;t call it "identity"). As there might not always be such an element (if the list is empty) the method returns an <code>Optional</code> that may contain the result or be empty.</p>
+<p>The second one is used for the same thing when no identity is provided. In such case, the first element is taken as the starting element (we can&#8217;t call it "identity"). As there might not always be such an element (if the list is empty) the method returns an <code>Optional</code> that may contain the result or be empty.</p>
 </div>
 <div class="paragraph">
-<p>The third method is used to reduce the list to a single value of a different type than the elements type. It takes an <code>identity</code> argument and a <code>BiFunction</code> accumulator, as in our example but no mapper, but a combiner. The absence of a mapper means that we will have to separately <code>map</code> the list prior to reducing, which is not a big deal. The combiner is used when the stream is processed in parallel. In such a case, it is broken in sub streams that are reduced in parallel, producing a number of partial results that must then be combined, hence the need for a combiner. As we will not process the stream in parallel, we don&#8217;t need the combiner, so we may pass whatever we want as the last parameter, provided that it compiles. For example:</p>
+<p>The third method is used to reduce the list to a single value of a different type than the elements type. It takes an <code>identity</code> argument and a <code>BiFunction</code> accumulator, as in our example, and no mapper, but a <em>combiner</em>. The absence of a mapper means that we will have to separately <code>map</code> the list prior to reducing, which is not a big deal. The combiner is used when the stream is processed in parallel. In such a case, it is broken in sub streams that are reduced in parallel, producing a number of partial results that must then be combined, hence the need for a combiner function. As we will not process the stream in parallel, we don&#8217;t need the combiner, so we may pass whatever we want as the last parameter, provided that it compiles. For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
