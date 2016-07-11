@@ -35,7 +35,7 @@
     <meta property="og:description" content="This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..." />
     <meta property="og:url" content="https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html" />
     <meta property="article:published_time" content="2016-07-05T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-07-11T12:19:16.530Z" />
+    <meta property="article:modified_time" content="2016-07-11T12:23:56.213Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Folding the Universe, part III : Java 8 List and Stream" />
@@ -57,7 +57,7 @@
     "headline": "Folding the Universe, part III : Java 8 List and Stream",
     "url": "https://pysaumont.github.io/2016/07/06/Folding-the-Universe-part-I-I-I-Java-8-List-and-Stream.html",
     "datePublished": "2016-07-05T22:00:00.000Z",
-    "dateModified": "2016-07-11T12:19:16.530Z",
+    "dateModified": "2016-07-11T12:23:56.213Z",
     "description": "This is the third article in a series about applying functional programming techniques like folding to Java programs. This series is a complement to my book Functional Programming in Java published by Manning. First two articles are available here: Folding..."
 }
     </script>
@@ -657,7 +657,7 @@ public static &lt;T&gt; Collector&lt;T, StringBuilder, String&gt; toDelimitedStr
 <h2 id="_adding_map_to_perform_map_reduce_with_a_reducing_collector">Adding map to perform map/reduce with a reducing collector</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>But "collecting", as Java 8 calls folding and reducing, is generally not used alone, but associated with a map operation (map/reduce). If we where to add tax and format the result with a currency before reducing them to a delimited string, we could write:</p>
+<p>But "collecting", as Java 8 calls folding and reducing, is generally not used alone, but associated with a map operation (map/reduce). If we where to add tax to prices and format the result with a currency before reducing them to a delimited string, we could write:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -676,12 +676,17 @@ System.out.println(list.stream().map(format.compose(addTax)).collect(toDelimited
 </div>
 </div>
 <div class="paragraph">
-<p>Of course, you can also compose the methods and use a method reference for the mapping. One you have a single mapping, you can do a map/reduce using one of the reducing collectors provided byt the <code>Collector</code> class:</p>
+<p>(Please not that there is no benefits in terms of performance, since several map operations on a stream will only cause one iteration.)</p>
+</div>
+<div class="paragraph">
+<p>Of course, you can also compose the methods and use a method reference for the mapping. One you have a single mapping, you can do a map/reduce using one of the reducing collectors provided by the <code>Collector</code> class:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public static &lt;T&gt; Collector&lt;T, ?, T&gt; reducing(T identity, BinaryOperator&lt;T&gt; op)
+
 public static &lt;T&gt; Collector&lt;T, ?, Optional&lt;T&gt;&gt; reducing(BinaryOperator&lt;T&gt; op)
+
 public static &lt;T, U&gt; Collector&lt;T, ?, U&gt; reducing(U identity, Function&lt;? super T, ? extends U&gt; mapper, BinaryOperator&lt;U&gt; op)</code></pre>
 </div>
 </div>
