@@ -169,20 +169,22 @@ List<String> names = new ArrayList<>(Arrays.asList("mickey", "donald", "pluto"))
 names.stream()...
 ----
 
-Then, looking at the 'Stream' interface, we can see three `reduce` methods:
+Then, looking at the `Stream` interface, we can see three `reduce` methods:
 
 [source,java]
 ----
 T reduce(T identity, BinaryOperator<T> accumulator);
+
 Optional<T> reduce(BinaryOperator<T> accumulator);
+
 <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner);
 ----
 
-Which one should we use? None o them. The first one is used to reduce a `Stream` to a value of the same type than the list elements, for example to sum a list of integers. This method takes the identity for the given operation as its first argument.
+Which one should we use? None of them. The first one is used to reduce a `Stream` to a value of the same type as its elements, for example to sum a list of integers. This method takes the identity for the given operation as its first argument.
 
-The second one is use for the same thing when no identity is provided. In such case, the first element is taken as the starting element (we can't call it "identity"). As there might not always be such an element (if the list is empty) the method returns an `Optional` that may contain the result or be empty.
+The second one is used for the same thing when no identity is provided. In such case, the first element is taken as the starting element (we can't call it "identity"). As there might not always be such an element (if the list is empty) the method returns an `Optional` that may contain the result or be empty.
 
-The third method is used to reduce the list to a single value of a different type than the elements type. It takes an `identity` argument and a `BiFunction` accumulator, as in our example but no mapper, but a combiner. The absence of a mapper means that we will have to separately `map` the list prior to reducing, which is not a big deal. The combiner is used when the stream is processed in parallel. In such a case, it is broken in sub streams that are reduced in parallel, producing a number of partial results that must then be combined, hence the need for a combiner. As we will not process the stream in parallel, we don't need the combiner, so we may pass whatever we want as the last parameter, provided that it compiles. For example:
+The third method is used to reduce the list to a single value of a different type than the elements type. It takes an `identity` argument and a `BiFunction` accumulator, as in our example, and no mapper, but a _combiner_. The absence of a mapper means that we will have to separately `map` the list prior to reducing, which is not a big deal. The combiner is used when the stream is processed in parallel. In such a case, it is broken in sub streams that are reduced in parallel, producing a number of partial results that must then be combined, hence the need for a combiner function. As we will not process the stream in parallel, we don't need the combiner, so we may pass whatever we want as the last parameter, provided that it compiles. For example:
 
 [source,java]
 ----
